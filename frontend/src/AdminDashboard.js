@@ -122,51 +122,51 @@ function AdminDashboard() {
         {/* Additional Stats */}
         {stats && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Statistiques Détaillées</h3>
+            <div className="bg-gray-900 border border-green-500 rounded-lg shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-green-400 mb-4">📊 Statistiques Détaillées</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Sites payés:</span>
-                  <span className="font-medium">{stats.paid_websites} / {stats.total_websites}</span>
+                  <span className="text-gray-400">Sites payés:</span>
+                  <span className="font-medium text-white">{stats.paid_websites} / {stats.total_websites}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Codes de parrainage créés:</span>
-                  <span className="font-medium">{stats.total_referrals}</span>
+                  <span className="text-gray-400">Codes de parrainage créés:</span>
+                  <span className="font-medium text-white">{stats.total_referrals}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Parrainages utilisés:</span>
-                  <span className="font-medium">{stats.used_referrals}</span>
+                  <span className="text-gray-400">Parrainages utilisés:</span>
+                  <span className="font-medium text-white">{stats.used_referrals}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Revenus moyens par site:</span>
-                  <span className="font-medium">
+                  <span className="text-gray-400">Revenus moyens par site:</span>
+                  <span className="font-medium text-green-400">
                     {stats.paid_websites > 0 ? (stats.total_revenue / stats.paid_websites).toFixed(2) : 0}€
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">🎯 Sites Récents</h3>
+            <div className="bg-gray-900 border border-green-500 rounded-lg shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-green-400 mb-4">🎯 Sites Récents</h3>
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {stats.recent_websites.map((website) => (
-                  <div key={website.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                  <div key={website.id} className="flex items-center justify-between p-3 bg-gray-800 rounded border border-green-900">
                     <div>
-                      <p className="font-medium text-sm">{website.business_name}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="font-medium text-sm text-white">{website.business_name}</p>
+                      <p className="text-xs text-gray-400">
                         {website.site_type} • {formatDate(website.created_at)}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium">{website.price}€</p>
+                      <p className="text-sm font-medium text-green-400">{website.price}€</p>
                       <div className="flex items-center space-x-1">
                         {website.paid ? (
-                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Payé</span>
+                          <span className="text-xs bg-green-900 text-green-300 px-2 py-1 rounded border border-green-700">Payé</span>
                         ) : (
-                          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">En attente</span>
+                          <span className="text-xs bg-yellow-900 text-yellow-300 px-2 py-1 rounded border border-yellow-700">En attente</span>
                         )}
                         {website.referral_used && (
-                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Parrainage</span>
+                          <span className="text-xs bg-blue-900 text-blue-300 px-2 py-1 rounded border border-blue-700">Parrainage</span>
                         )}
                       </div>
                     </div>
