@@ -44,28 +44,28 @@ function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex items-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mr-3"></div>
-          <span>Chargement du tableau de bord...</span>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mr-3"></div>
+          <span className="text-white">Chargement du tableau de bord...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-gray-900 shadow-sm border-b border-green-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">📊 Dashboard Admin</h1>
-              <p className="text-gray-600">AI WebGen - Tableau de bord administrateur</p>
+              <h1 className="text-2xl font-bold text-white">📊 Dashboard Admin</h1>
+              <p className="text-gray-400">AI WebGen - Tableau de bord administrateur</p>
             </div>
             <button
               onClick={() => window.location.href = "/"}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-lg"
             >
               🏠 Retour à l'app
             </button>
