@@ -77,42 +77,42 @@ function AdminDashboard() {
         {/* Stats Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-gray-900 border border-green-500 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center">
                 <div className="text-3xl mr-4">🌐</div>
                 <div>
-                  <p className="text-sm text-gray-600">Sites Créés</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.total_websites}</p>
+                  <p className="text-sm text-gray-400">Sites Créés</p>
+                  <p className="text-2xl font-bold text-white">{stats.total_websites}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-gray-900 border border-green-500 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center">
                 <div className="text-3xl mr-4">💰</div>
                 <div>
-                  <p className="text-sm text-gray-600">Revenus</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.total_revenue}€</p>
+                  <p className="text-sm text-gray-400">Revenus</p>
+                  <p className="text-2xl font-bold text-green-500">{stats.total_revenue}€</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-gray-900 border border-green-500 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center">
                 <div className="text-3xl mr-4">✅</div>
                 <div>
-                  <p className="text-sm text-gray-600">Taux de Conversion</p>
-                  <p className="text-2xl font-bold text-blue-600">{stats.conversion_rate}%</p>
+                  <p className="text-sm text-gray-400">Taux de Conversion</p>
+                  <p className="text-2xl font-bold text-green-400">{stats.conversion_rate}%</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-gray-900 border border-green-500 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center">
                 <div className="text-3xl mr-4">📈</div>
                 <div>
-                  <p className="text-sm text-gray-600">Aujourd'hui</p>
-                  <p className="text-2xl font-bold text-orange-600">{stats.today_websites}</p>
+                  <p className="text-sm text-gray-400">Aujourd'hui</p>
+                  <p className="text-2xl font-bold text-green-300">{stats.today_websites}</p>
                 </div>
               </div>
             </div>
