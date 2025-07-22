@@ -68,7 +68,805 @@ class PayPalOrderResponse(BaseModel):
     amount: float
     website_id: str
 
-# LLM Integration for website generation
+# Website Templates
+WEBSITE_TEMPLATES = {
+    "restaurant": {
+        "name": "🍽️ Restaurant",
+        "description": "Template professionnel pour restaurants",
+        "html": """
+        <header class="hero">
+            <nav class="navbar">
+                <div class="logo">{business_name}</div>
+                <ul class="nav-links">
+                    <li><a href="#menu">Menu</a></li>
+                    <li><a href="#about">À Propos</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="hero-content">
+                <h1>Bienvenue chez {business_name}</h1>
+                <p>Une expérience culinaire exceptionnelle vous attend</p>
+                <a href="#menu" class="cta-button">Découvrir notre menu</a>
+            </div>
+        </header>
+
+        <section id="menu" class="menu-section">
+            <div class="container">
+                <h2>Notre Menu</h2>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <h3>Entrées</h3>
+                        <div class="dish">
+                            <span class="dish-name">Salade César</span>
+                            <span class="dish-price">12€</span>
+                        </div>
+                        <div class="dish">
+                            <span class="dish-name">Carpaccio de bœuf</span>
+                            <span class="dish-price">15€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>Plats Principaux</h3>
+                        <div class="dish">
+                            <span class="dish-name">Saumon grillé</span>
+                            <span class="dish-price">24€</span>
+                        </div>
+                        <div class="dish">
+                            <span class="dish-name">Côte de bœuf</span>
+                            <span class="dish-price">28€</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>Desserts</h3>
+                        <div class="dish">
+                            <span class="dish-name">Tiramisu maison</span>
+                            <span class="dish-price">8€</span>
+                        </div>
+                        <div class="dish">
+                            <span class="dish-name">Tarte aux fruits</span>
+                            <span class="dish-price">7€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="container">
+                <h2>À Propos</h2>
+                <p>Depuis 15 ans, {business_name} vous accueille dans un cadre chaleureux pour vous faire découvrir une cuisine authentique et raffinée.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <h2>Contact & Réservation</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>📍 Adresse</h3>
+                        <p>123 Rue de la Gastronomie<br>75001 Paris</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>📞 Téléphone</h3>
+                        <p>01 23 45 67 89</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>🕐 Horaires</h3>
+                        <p>Lun-Sam: 12h-14h, 19h-22h<br>Dimanche: Fermé</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        """,
+        "css": """
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Georgia', serif; 
+            line-height: 1.6; 
+            color: #333;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600"><rect fill="{primary_color}" width="1000" height="600"/></svg>');
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: {primary_color};
+        }
+        
+        .hero-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            background: {primary_color};
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .menu-section {
+            padding: 100px 0;
+            background: #f8f9fa;
+        }
+        
+        .menu-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: {primary_color};
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .menu-item {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .menu-item h3 {
+            color: {primary_color};
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid {primary_color};
+            padding-bottom: 10px;
+        }
+        
+        .dish {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 10px 0;
+            border-bottom: 1px dotted #ddd;
+        }
+        
+        .dish-name {
+            font-weight: 500;
+        }
+        
+        .dish-price {
+            color: {primary_color};
+            font-weight: bold;
+        }
+        
+        .about-section, .contact-section {
+            padding: 80px 0;
+        }
+        
+        .about-section h2, .contact-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: {primary_color};
+        }
+        
+        .about-section p {
+            text-align: center;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+        
+        .contact-item h3 {
+            color: {primary_color};
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .navbar { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+        """,
+        "js": """
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.menu-item, .contact-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+        """
+    },
+    "salon": {
+        "name": "💇 Salon de Coiffure",
+        "description": "Template élégant pour salons de beauté",
+        "html": """
+        <header class="hero">
+            <nav class="navbar">
+                <div class="logo">{business_name}</div>
+                <div class="nav-links">
+                    <a href="#services">Services</a>
+                    <a href="#gallery">Galerie</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </nav>
+            <div class="hero-content">
+                <h1>Révélez votre beauté</h1>
+                <p>Chez {business_name}, votre style est notre passion</p>
+                <a href="#contact" class="cta-button">Prendre rendez-vous</a>
+            </div>
+        </header>
+
+        <section id="services" class="services-section">
+            <div class="container">
+                <h2>Nos Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">✂️</div>
+                        <h3>Coupe & Coiffage</h3>
+                        <p>Coupes tendance et coiffage personnalisé</p>
+                        <span class="price">À partir de 35€</span>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🎨</div>
+                        <h3>Coloration</h3>
+                        <p>Colorations naturelles et techniques avancées</p>
+                        <span class="price">À partir de 55€</span>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">💆</div>
+                        <h3>Soins</h3>
+                        <p>Soins capillaires profonds et relaxants</p>
+                        <span class="price">À partir de 25€</span>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">👰</div>
+                        <h3>Mariages</h3>
+                        <p>Coiffures et maquillage pour votre grand jour</p>
+                        <span class="price">Sur devis</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="gallery-section">
+            <div class="container">
+                <h2>Nos Réalisations</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item">Avant/Après 1</div>
+                    <div class="gallery-item">Avant/Après 2</div>
+                    <div class="gallery-item">Avant/Après 3</div>
+                    <div class="gallery-item">Avant/Après 4</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <h2>Prenez Rendez-vous</h2>
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3>📍 Adresse</h3>
+                        <p>45 Avenue de la Beauté<br>75008 Paris</p>
+                        
+                        <h3>📞 Téléphone</h3>
+                        <p>01 42 56 78 90</p>
+                        
+                        <h3>🕐 Horaires</h3>
+                        <p>Mar-Sam: 9h-19h<br>Lun: Fermé<br>Dim: Sur RDV</p>
+                    </div>
+                    <div class="booking-form">
+                        <h3>Réservation en ligne</h3>
+                        <form>
+                            <input type="text" placeholder="Votre nom" required>
+                            <input type="tel" placeholder="Téléphone" required>
+                            <input type="email" placeholder="Email" required>
+                            <select required>
+                                <option>Choisir un service</option>
+                                <option>Coupe & Coiffage</option>
+                                <option>Coloration</option>
+                                <option>Soins</option>
+                                <option>Mariage</option>
+                            </select>
+                            <input type="date" required>
+                            <textarea placeholder="Message (optionnel)"></textarea>
+                            <button type="submit">Réserver</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        """,
+        "css": """
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Arial', sans-serif; 
+            line-height: 1.6; 
+            color: #333;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, {primary_color} 0%, #ff6b9d 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+        
+        .hero-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            background: white;
+            color: {primary_color};
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .services-section {
+            padding: 100px 0;
+            background: #f8f9fa;
+        }
+        
+        .services-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: {primary_color};
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+        
+        .service-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .service-card h3 {
+            color: {primary_color};
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .service-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .price {
+            background: {primary_color};
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .gallery-section {
+            padding: 100px 0;
+        }
+        
+        .gallery-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: {primary_color};
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-item {
+            aspect-ratio: 1;
+            background: linear-gradient(45deg, {primary_color}, #ff6b9d);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .contact-section {
+            padding: 100px 0;
+            background: #f8f9fa;
+        }
+        
+        .contact-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: {primary_color};
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 60px;
+        }
+        
+        .contact-info h3 {
+            color: {primary_color};
+            margin: 30px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .contact-info h3:first-child {
+            margin-top: 0;
+        }
+        
+        .booking-form {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .booking-form h3 {
+            color: {primary_color};
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .booking-form input,
+        .booking-form select,
+        .booking-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .booking-form input:focus,
+        .booking-form select:focus,
+        .booking-form textarea:focus {
+            border-color: {primary_color};
+            outline: none;
+        }
+        
+        .booking-form button {
+            width: 100%;
+            padding: 15px;
+            background: {primary_color};
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .booking-form button:hover {
+            background: #e91e63;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .navbar { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+        """,
+        "js": """
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Form handling
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Merci pour votre demande de rendez-vous ! Nous vous contacterons rapidement.');
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.service-card, .gallery-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+        """
+    }
+}
+
+# Template Generation Function
+def generate_from_template(template_key: str, business_name: str, primary_color: str, description: str = ""):
+    """Generate website from template"""
+    if template_key not in WEBSITE_TEMPLATES:
+        return None
+    
+    template = WEBSITE_TEMPLATES[template_key]
+    
+    # Replace placeholders in HTML
+    html_content = template["html"].format(
+        business_name=business_name,
+        primary_color=primary_color
+    )
+    
+    # Replace placeholders in CSS
+    css_content = template["css"].format(
+        primary_color=primary_color
+    )
+    
+    # JS content (no placeholders for now)
+    js_content = template["js"]
+    
+    return {
+        "html": html_content,
+        "css": css_content,
+        "js": js_content
+    }
+
+class TemplateWebsiteRequest(BaseModel):
+    template_key: str
+    business_name: str
+    primary_color: Optional[str] = "#3B82F6"
+    referral_code: Optional[str] = None
+
+@api_router.get("/templates")
+async def get_available_templates():
+    """Get list of available templates"""
+    templates = []
+    for key, template in WEBSITE_TEMPLATES.items():
+        templates.append({
+            "key": key,
+            "name": template["name"],
+            "description": template["description"]
+        })
+    return {"templates": templates}
+
+@api_router.post("/generate-from-template", response_model=WebsiteResponse)
+async def generate_website_from_template(request: TemplateWebsiteRequest):
+    """Generate a website from template (ultra fast)"""
+    try:
+        # Check if referral code is valid and not expired
+        price = 15.0
+        if request.referral_code:
+            referral = await db.referrals.find_one({
+                "code": request.referral_code,
+                "expires_at": {"$gt": datetime.utcnow()},
+                "used": False
+            })
+            if referral:
+                price = 10.0
+        
+        # Generate from template
+        website_content = generate_from_template(
+            request.template_key,
+            request.business_name,
+            request.primary_color or "#3B82F6"
+        )
+        
+        if not website_content:
+            raise HTTPException(status_code=404, detail="Template not found")
+        
+        # Create website record
+        website_id = str(uuid.uuid4())
+        website_data = {
+            "id": website_id,
+            "description": f"Site généré avec le template {request.template_key}",
+            "site_type": request.template_key,
+            "business_name": request.business_name,
+            "primary_color": request.primary_color,
+            "html_content": website_content["html"],
+            "css_content": website_content["css"],
+            "js_content": website_content["js"],
+            "price": price,
+            "referral_code": request.referral_code,
+            "created_at": datetime.utcnow(),
+            "paid": False,
+            "is_template": True
+        }
+        
+        await db.websites.insert_one(website_data)
+        
+        return WebsiteResponse(
+            id=website_id,
+            html_content=website_content["html"],
+            css_content=website_content["css"],
+            js_content=website_content["js"],
+            preview_url=f"/preview/{website_id}",
+            price=price,
+            created_at=website_data["created_at"]
+        )
+        
+    except Exception as e:
+        logging.error(f"Error in generate_website_from_template: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 async def generate_website_content(description: str, site_type: str, business_name: str, primary_color: str):
     """Generate website content using Gemini AI"""
     try:
