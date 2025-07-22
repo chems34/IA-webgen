@@ -255,14 +255,9 @@ function WebsiteGenerator() {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Créez votre site web parfait
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 mb-8">
               Décrivez votre projet et notre IA créera un site web professionnel pour vous
             </p>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-6">
-              <p className="text-green-700 text-sm text-center">
-                🎯 <strong>Déjà 500+ sites créés</strong> • ⭐ Note moyenne 4.9/5 • 🔒 Paiement sécurisé
-              </p>
-            </div>
 
             <div className="space-y-6">
               <div>
