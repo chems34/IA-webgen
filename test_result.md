@@ -225,9 +225,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "All backend API endpoints tested and verified"
-  stuck_tasks: []
-  test_all: true
+    - "Share to Save Button (Partager pour économiser)"
+  stuck_tasks:
+    - "Share to Save Button (Partager pour économiser)"
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:
