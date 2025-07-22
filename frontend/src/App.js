@@ -112,34 +112,54 @@ function WebsiteGenerator() {
       const response = await axios.post(`${API}/create-referral`, {});
       const referralLink = response.data.referral_link;
       
-      // Copy to clipboard
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(referralLink);
-        alert(`🎉 Lien de parrainage copié dans le presse-papier !\n\n📋 ${referralLink}\n\n💡 Partagez ce lien pour faire économiser 5€ à vos amis !`);
-      } else {
-        // Fallback for older browsers
-        const textArea = document.createElement("textarea");
-        textArea.value = referralLink;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          alert(`🎉 Lien de parrainage créé !\n\n📋 ${referralLink}\n\n💡 Le lien a été sélectionné. Appuyez sur Ctrl+C (ou Cmd+C sur Mac) pour le copier.`);
-        } catch (err) {
-          console.error('Erreur lors de la copie:', err);
-          alert(`🎉 Votre lien de parrainage :\n\n📋 ${referralLink}\n\n💡 Copiez ce lien manuellement pour le partager !`);
+      // Always show the link first
+      const message = `🎉 Votre lien de parrainage a été créé !\n\n📋 ${referralLink}\n\n💡 Partagez ce lien pour faire économiser 5€ à vos amis !`;
+      
+      // Try to copy to clipboard (but don't fail if it doesn't work)
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(referralLink);
+          alert(message + "\n\n✅ Le lien a été copié dans votre presse-papier !");
+        } else {
+          // Fallback method
+          const textArea = document.createElement("textarea");
+          textArea.value = referralLink;
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-999999px';
+          textArea.style.top = '-999999px';
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          
+          try {
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            if (successful) {
+              alert(message + "\n\n✅ Le lien a été copié dans votre presse-papier !");
+            } else {
+              alert(message + "\n\n📝 Copiez ce lien manuellement pour le partager !");
+            }
+          } catch (err) {
+            document.body.removeChild(textArea);
+            alert(message + "\n\n📝 Copiez ce lien manuellement pour le partager !");
+          }
         }
-        document.body.removeChild(textArea);
+      } catch (clipboardError) {
+        // Even if clipboard fails, still show the link
+        console.log("Clipboard failed, but that's OK:", clipboardError);
+        alert(message + "\n\n📝 Copiez ce lien manuellement pour le partager !");
       }
+      
     } catch (error) {
       console.error("Erreur lors de la création du lien de parrainage:", error);
-      if (error.response) {
-        alert(`❌ Erreur du serveur: ${error.response.data?.detail || 'Erreur inconnue'}`);
+      
+      if (error.response?.status === 500) {
+        alert("❌ Erreur du serveur. Veuillez réessayer dans quelques instants.");
       } else if (error.request) {
         alert("❌ Impossible de contacter le serveur. Vérifiez votre connexion internet.");
       } else {
-        alert("❌ Une erreur inattendue s'est produite. Veuillez réessayer.");
+        alert("❌ Une erreur inattendue s'est produite lors de la création du lien. Veuillez réessayer.");
       }
     }
   };
