@@ -368,6 +368,12 @@ function WebsiteGenerator() {
                   "🚀 Générer mon site web"
                 )}
               </button>
+              
+              <div className="text-center mt-3">
+                <p className="text-xs text-gray-500">
+                  💡 Génération en moins de 30 secondes • Sans engagement
+                </p>
+              </div>
             </div>
           </div>
         )}
