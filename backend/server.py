@@ -407,6 +407,87 @@ Enjoy your new website!
         headers={"Content-Disposition": f"attachment; filename={website['business_name']}_website.zip"}
     )
 
+@api_router.get("/admin/stats")
+async def get_admin_stats():
+    """Get admin dashboard statistics"""
+    try:
+        # Get total websites created
+        total_websites = await db.websites.count_documents({})
+        
+        # Get total paid websites
+        paid_websites = await db.websites.count_documents({"paid": True})
+        
+        # Calculate total revenue
+        revenue_cursor = db.websites.find({"paid": True})
+        total_revenue = 0
+        async for website in revenue_cursor:
+            total_revenue += website.get("price", 0)
+        
+        # Get websites created today
+        from datetime import datetime, timedelta
+        today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_websites = await db.websites.count_documents({
+            "created_at": {"$gte": today_start}
+        })
+        
+        # Get referral stats
+        total_referrals = await db.referrals.count_documents({})
+        used_referrals = await db.referrals.count_documents({"used": True})
+        
+        # Get recent websites
+        recent_websites = []
+        cursor = db.websites.find().sort("created_at", -1).limit(10)
+        async for website in cursor:
+            recent_websites.append({
+                "id": website["id"],
+                "business_name": website["business_name"],
+                "site_type": website["site_type"],
+                "price": website["price"],
+                "paid": website.get("paid", False),
+                "created_at": website["created_at"].isoformat(),
+                "referral_used": bool(website.get("referral_code"))
+            })
+        
+        return {
+            "total_websites": total_websites,
+            "paid_websites": paid_websites,
+            "total_revenue": total_revenue,
+            "today_websites": today_websites,
+            "total_referrals": total_referrals,
+            "used_referrals": used_referrals,
+            "conversion_rate": round((paid_websites / max(total_websites, 1)) * 100, 1),
+            "recent_websites": recent_websites
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting admin stats: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/admin/websites")
+async def get_all_websites(skip: int = 0, limit: int = 50):
+    """Get all websites for admin"""
+    try:
+        cursor = db.websites.find().sort("created_at", -1).skip(skip).limit(limit)
+        websites = []
+        async for website in cursor:
+            websites.append({
+                "id": website["id"],
+                "business_name": website["business_name"],
+                "site_type": website["site_type"],
+                "description": website["description"][:100] + "..." if len(website["description"]) > 100 else website["description"],
+                "price": website["price"],
+                "paid": website.get("paid", False),
+                "created_at": website["created_at"].isoformat(),
+                "referral_code": website.get("referral_code"),
+                "primary_color": website.get("primary_color")
+            })
+        
+        return {"websites": websites}
+        
+    except Exception as e:
+        logging.error(f"Error getting websites: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/")
 async def root():
     return {"message": "Website Generator API is running!"}
