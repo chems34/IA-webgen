@@ -166,6 +166,12 @@ function WebsiteGenerator() {
               >
                 📤 Partager pour économiser
               </button>
+              <a
+                href="/admin"
+                className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+              >
+                👑 Admin
+              </a>
             </div>
           </div>
         </div>
