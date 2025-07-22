@@ -1,85 +1,157 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="A product of emergent.sh" />
-        <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-        <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-        <title>Emergent | Fullstack App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#3B82F6" />
+        
+        <!-- PWA Meta Tags -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="AI WebGen">
+        <meta name="application-name" content="AI WebGen">
+        
+        <!-- SEO Meta Tags -->
+        <meta name="description" content="Créez des sites web professionnels avec l'Intelligence Artificielle en quelques minutes. Génération automatique, paiement sécurisé, téléchargement immédiat." />
+        <meta name="keywords" content="site web, IA, intelligence artificielle, création site, webgen, générateur site, AI" />
+        <meta name="author" content="AI WebGen" />
+        
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="AI WebGen - Créateur de sites web par IA" />
+        <meta property="og:description" content="Créez des sites web professionnels avec l'Intelligence Artificielle en quelques minutes." />
+        <meta property="og:image" content="/android-chrome-512x512.png" />
+        <meta property="og:url" content="https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com" />
+        <meta property="og:site_name" content="AI WebGen" />
+        
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AI WebGen - Créateur de sites web par IA" />
+        <meta name="twitter:description" content="Créez des sites web professionnels avec l'Intelligence Artificielle en quelques minutes." />
+        <meta name="twitter:image" content="/android-chrome-512x512.png" />
+        
+        <!-- Favicon and Icons -->
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+        <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+        
+        <!-- PWA Manifest -->
+        <link rel="manifest" href="/manifest.json" />
+        
+        <!-- Preload critical resources -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        
+        <title>AI WebGen - Créateur de sites web par Intelligence Artificielle</title>
+        
+        <!-- Structured Data -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "AI WebGen",
+          "description": "Créez des sites web professionnels avec l'Intelligence Artificielle en quelques minutes",
+          "url": "https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "15",
+            "priceCurrency": "EUR"
+          }
+        }
+        </script>
     </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-        <a
-            id="emergent-badge"
-            target="_blank"
-            href="https://app.emergent.sh/?utm_source=emergent-badge"
-            style="
-                display: flex !important;
-                align-items: center !important;
-                position: fixed !important;
-                bottom: 20px;
-                right: 20px;
-                text-decoration: none;
-                padding: 6px 10px;
-                font-family: -apple-system, BlinkMacSystemFont,
-                    &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, Cantarell,
-                    &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;,
-                    sans-serif !important;
-                font-size: 12px !important;
-                z-index: 9999 !important;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-                border-radius: 8px !important;
-                background-color: #ffffff !important;
-                border: 1px solid rgba(255, 255, 255, 0.25) !important;
-            "
-        >
-            <div
-                style="display: flex; flex-direction: row; align-items: center"
-            >
-                <img
-                    style="width: 20px; height: 20px; margin-right: 8px"
-                    src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4"
-                />
-                <p
-                    style="
-                        color: #000000;
-                        font-family: -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu,
-                            Cantarell, &quot;Open Sans&quot;,
-                            &quot;Helvetica Neue&quot;, sans-serif !important;
-                        font-size: 12px !important;
-                        align-items: center;
-                        margin-bottom: 0;
-                    "
-                >
-                    Made with Emergent
-                </p>
+        <noscript>
+            <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+                <h2>🤖 AI WebGen</h2>
+                <p>Vous devez activer JavaScript pour utiliser cette application.</p>
+                <p>You need to enable JavaScript to run this app.</p>
             </div>
-        </a>
+        </noscript>
+        
+        <div id="root"></div>
+        
+        <!-- PWA Install Prompt -->
+        <div id="pwa-install-prompt" style="display: none; position: fixed; bottom: 20px; left: 20px; right: 20px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); padding: 16px; z-index: 10000;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <img src="/android-chrome-192x192.png" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 12px;">
+                    <div>
+                        <div style="font-weight: 600; color: #1f2937;">Installer AI WebGen</div>
+                        <div style="font-size: 14px; color: #6b7280;">Accès rapide depuis votre écran d'accueil</div>
+                    </div>
+                </div>
+                <div>
+                    <button id="pwa-install-button" style="background: #3B82F6; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 500; cursor: pointer; margin-right: 8px;">Installer</button>
+                    <button id="pwa-dismiss-button" style="background: #f3f4f6; color: #374151; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer;">✕</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PWA Service Worker Registration -->
+        <script>
+            // Register Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(function(registration) {
+                            console.log('✅ Service Worker registered:', registration.scope);
+                        })
+                        .catch(function(error) {
+                            console.log('❌ Service Worker registration failed:', error);
+                        });
+                });
+            }
+            
+            // PWA Install Prompt
+            let deferredPrompt;
+            const installPrompt = document.getElementById('pwa-install-prompt');
+            const installButton = document.getElementById('pwa-install-button');
+            const dismissButton = document.getElementById('pwa-dismiss-button');
+            
+            window.addEventListener('beforeinstallprompt', function(e) {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Don't show if already dismissed
+                if (localStorage.getItem('pwa-dismissed') !== 'true') {
+                    installPrompt.style.display = 'block';
+                }
+            });
+            
+            installButton.addEventListener('click', function() {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(function(choiceResult) {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('✅ PWA installed');
+                        }
+                        deferredPrompt = null;
+                        installPrompt.style.display = 'none';
+                    });
+                }
+            });
+            
+            dismissButton.addEventListener('click', function() {
+                installPrompt.style.display = 'none';
+                localStorage.setItem('pwa-dismissed', 'true');
+            });
+            
+            // Hide prompt if already installed
+            window.addEventListener('appinstalled', function() {
+                installPrompt.style.display = 'none';
+                console.log('✅ PWA was installed');
+            });
+        </script>
+        
+        <!-- Analytics and Performance -->
         <script>
             !(function (t, e) {
                 var o, n, p, r;
@@ -144,8 +216,44 @@
             })(document, window.posthog || []);
             posthog.init("phc_yJW1VjHGGwmCbbrtczfqqNxgBDbhlhOWcdzcIJEOTFE", {
                 api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
+                person_profiles: "identified_only"
             });
         </script>
+        
+        <!-- Made with Emergent Badge -->
+        <a
+            id="emergent-badge"
+            target="_blank"
+            href="https://app.emergent.sh/?utm_source=emergent-badge"
+            style="
+                display: flex !important;
+                align-items: center !important;
+                position: fixed !important;
+                bottom: 20px;
+                right: 20px;
+                text-decoration: none;
+                padding: 6px 10px;
+                font-family: -apple-system, BlinkMacSystemFont,
+                    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+                    'Open Sans', 'Helvetica Neue',
+                    sans-serif !important;
+                font-size: 12px !important;
+                z-index: 9999 !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+                border-radius: 8px !important;
+                background-color: #ffffff !important;
+                border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            "
+        >
+            <div style="display: flex; flex-direction: row; align-items: center">
+                <img
+                    style="width: 20px; height: 20px; margin-right: 8px"
+                    src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4"
+                />
+                <p style="color: #000000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important; font-size: 12px !important; align-items: center; margin-bottom: 0;">
+                    Made with Emergent
+                </p>
+            </div>
+        </a>
     </body>
 </html>

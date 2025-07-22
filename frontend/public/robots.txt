@@ -1,0 +1,25 @@
+# AI WebGen - Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com/sitemap.xml
+
+# Allow all search engines to index
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Disallow sensitive paths (if any)
+Disallow: /api/
+Disallow: *.json
+Disallow: /admin/
+
+# Allow specific files
+Allow: /manifest.json
+Allow: /sw.js
