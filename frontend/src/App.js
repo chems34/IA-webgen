@@ -539,4 +539,15 @@ function WebsiteGenerator() {
   );
 }
 
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<WebsiteGenerator />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
 export default App;
