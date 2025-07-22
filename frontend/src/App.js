@@ -194,7 +194,10 @@ function WebsiteGenerator() {
             <div className="flex items-center">
               <div className="text-2xl font-bold text-indigo-600">🤖 AI WebGen</div>
               <div className="ml-4 text-sm text-gray-600">
-                Créateur de sites web par Intelligence Artificielle
+                <div className="font-medium">Créateur de sites web par Intelligence Artificielle</div>
+                <div className="text-xs text-green-500 italic mt-1">
+                  ✨ "De l'idée au site web en 3 minutes - Qualité professionnelle garantie"
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
