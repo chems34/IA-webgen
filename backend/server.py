@@ -1035,30 +1035,34 @@ async def preview_website(website_id: str):
     return {"html": full_html}
 
 @api_router.post("/create-referral")
-async def create_referral_link(user_id: str = None):
+async def create_referral_link():
     """Create a referral link for sharing"""
-    if not user_id:
+    try:
         user_id = str(uuid.uuid4())
-    
-    referral_code = secrets.token_urlsafe(8)
-    expires_at = datetime.utcnow() + timedelta(hours=24)
-    
-    referral_data = {
-        "id": str(uuid.uuid4()),
-        "code": referral_code,
-        "user_id": user_id,
-        "created_at": datetime.utcnow(),
-        "expires_at": expires_at,
-        "used": False
-    }
-    
-    await db.referrals.insert_one(referral_data)
-    
-    return {
-        "referral_code": referral_code,
-        "referral_link": f"https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com/?ref={referral_code}",
-        "expires_at": expires_at
-    }
+        referral_code = secrets.token_urlsafe(8)
+        expires_at = datetime.utcnow() + timedelta(hours=24)
+        
+        referral_data = {
+            "id": str(uuid.uuid4()),
+            "code": referral_code,
+            "user_id": user_id,
+            "created_at": datetime.utcnow(),
+            "expires_at": expires_at,
+            "used": False
+        }
+        
+        await db.referrals.insert_one(referral_data)
+        
+        return {
+            "referral_code": referral_code,
+            "referral_link": f"https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com/?ref={referral_code}",
+            "expires_at": expires_at,
+            "message": "Lien de parrainage créé avec succès !"
+        }
+        
+    except Exception as e:
+        logging.error(f"Error creating referral link: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la création du lien de parrainage")
 
 @api_router.post("/paypal/create-payment-url", response_model=PayPalOrderResponse)
 async def create_paypal_payment_url(request: PayPalOrderRequest):
