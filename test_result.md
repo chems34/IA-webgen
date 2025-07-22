@@ -228,9 +228,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Share to Save Button (Partager pour économiser)"
+    []
   stuck_tasks:
-    - "Share to Save Button (Partager pour économiser)"
+    []
   test_all: false
   test_priority: "high_first"
 
