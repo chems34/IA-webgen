@@ -178,83 +178,83 @@ function AdminDashboard() {
         )}
 
         {/* All Websites Table */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">🌐 Tous les Sites Web</h3>
+        <div className="bg-gray-900 border border-green-500 rounded-lg shadow-lg">
+          <div className="px-6 py-4 border-b border-green-500">
+            <h3 className="text-lg font-semibold text-green-400">🌐 Tous les Sites Web</h3>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-green-900">
+              <thead className="bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-400 uppercase tracking-wider">
                     Entreprise
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-400 uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-400 uppercase tracking-wider">
                     Prix
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-400 uppercase tracking-wider">
                     État
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-400 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-400 uppercase tracking-wider">
                     Couleur
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-gray-900 divide-y divide-green-900">
                 {websites.map((website) => (
-                  <tr key={website.id} className="hover:bg-gray-50">
+                  <tr key={website.id} className="hover:bg-gray-800 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-white">
                           {website.business_name}
                         </div>
-                        <div className="text-sm text-gray-500 truncate max-w-xs">
+                        <div className="text-sm text-gray-400 truncate max-w-xs">
                           {website.description}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">
+                      <span className="text-sm text-green-300">
                         {website.site_type === 'vitrine' && '🏪 Vitrine'}
                         {website.site_type === 'ecommerce' && '🛒 E-commerce'}
                         {website.site_type === 'blog' && '📝 Blog'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm font-medium text-gray-900">{website.price}€</span>
+                      <span className="text-sm font-medium text-green-400">{website.price}€</span>
                       {website.referral_code && (
-                        <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                        <span className="ml-2 text-xs bg-blue-900 text-blue-300 px-2 py-1 rounded border border-blue-700">
                           Parrainage
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {website.paid ? (
-                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-900 text-green-300 border border-green-700">
                           Payé
                         </span>
                       ) : (
-                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-900 text-yellow-300 border border-yellow-700">
                           En attente
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                       {formatDate(website.created_at)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div
-                          className="w-4 h-4 rounded border mr-2"
+                          className="w-4 h-4 rounded border mr-2 border-gray-600"
                           style={{ backgroundColor: website.primary_color }}
                         ></div>
-                        <span className="text-sm text-gray-500">{website.primary_color}</span>
+                        <span className="text-sm text-gray-400">{website.primary_color}</span>
                       </div>
                     </td>
                   </tr>
