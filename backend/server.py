@@ -13,8 +13,6 @@ import secrets
 import zipfile
 import io
 import base64
-import json
-import requests
 from fastapi.responses import StreamingResponse
 
 # Load environment variables
@@ -29,54 +27,12 @@ db = client[os.environ['DB_NAME']]
 # PayPal Configuration
 PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID')
 PAYPAL_CLIENT_SECRET = os.environ.get('PAYPAL_CLIENT_SECRET')
-PAYPAL_BASE_URL = "https://api.sandbox.paypal.com"  # Use sandbox for testing
 
 # Create the main app without a prefix
 app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
-
-# PayPal Access Token Cache
-paypal_access_token = None
-paypal_token_expires_at = None
-
-async def get_paypal_access_token():
-    """Get PayPal access token"""
-    global paypal_access_token, paypal_token_expires_at
-    
-    # Check if we have a valid token
-    if paypal_access_token and paypal_token_expires_at and datetime.utcnow() < paypal_token_expires_at:
-        return paypal_access_token
-    
-    # Get new token
-    auth_url = f"{PAYPAL_BASE_URL}/v1/oauth2/token"
-    
-    headers = {
-        "Accept": "application/json",
-        "Accept-Language": "en_US"
-    }
-    
-    data = "grant_type=client_credentials"
-    
-    try:
-        response = requests.post(
-            auth_url,
-            headers=headers,
-            data=data,
-            auth=(PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET)
-        )
-        
-        if response.status_code == 200:
-            token_data = response.json()
-            paypal_access_token = token_data['access_token']
-            expires_in = token_data.get('expires_in', 3600)
-            paypal_token_expires_at = datetime.utcnow() + timedelta(seconds=expires_in - 300)  # 5 min buffer
-            return paypal_access_token
-        else:
-            raise HTTPException(status_code=500, detail="Failed to get PayPal access token")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"PayPal authentication error: {str(e)}")
 
 # Pydantic Models
 class WebsiteRequest(BaseModel):
@@ -108,9 +64,9 @@ class PayPalOrderRequest(BaseModel):
     referral_code: Optional[str] = None
 
 class PayPalOrderResponse(BaseModel):
-    order_id: str
-    approval_url: str
+    payment_url: str
     amount: float
+    website_id: str
 
 # LLM Integration for website generation
 async def generate_website_content(description: str, site_type: str, business_name: str, primary_color: str):
@@ -306,9 +262,9 @@ async def create_referral_link(user_id: str = None):
         "expires_at": expires_at
     }
 
-@api_router.post("/paypal/create-order", response_model=PayPalOrderResponse)
-async def create_paypal_order(request: PayPalOrderRequest):
-    """Create a PayPal order for website purchase"""
+@api_router.post("/paypal/create-payment-url", response_model=PayPalOrderResponse)
+async def create_paypal_payment_url(request: PayPalOrderRequest):
+    """Create a PayPal payment URL (simplified version)"""
     try:
         # Get website details
         website = await db.websites.find_one({"id": request.website_id})
@@ -326,124 +282,65 @@ async def create_paypal_order(request: PayPalOrderRequest):
             if referral:
                 final_price = 10.0
         
-        # Get PayPal access token
-        access_token = await get_paypal_access_token()
-        
-        # Create PayPal order
-        order_url = f"{PAYPAL_BASE_URL}/v2/checkout/orders"
-        
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {access_token}",
-            "PayPal-Request-Id": str(uuid.uuid4())
+        # Create payment record in database
+        payment_id = str(uuid.uuid4())
+        payment_data = {
+            "id": payment_id,
+            "website_id": request.website_id,
+            "amount": final_price,
+            "referral_code": request.referral_code,
+            "status": "pending",
+            "created_at": datetime.utcnow()
         }
         
-        order_data = {
-            "intent": "CAPTURE",
-            "purchase_units": [{
-                "reference_id": request.website_id,
-                "amount": {
-                    "currency_code": "EUR",
-                    "value": str(final_price)
-                },
-                "description": f"Site web AI pour {website['business_name']}"
-            }],
-            "application_context": {
-                "return_url": f"https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com/payment-success",
-                "cancel_url": f"https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com/payment-cancel"
-            }
-        }
+        await db.payments.insert_one(payment_data)
         
-        response = requests.post(order_url, headers=headers, json=order_data)
+        # Create PayPal.me URL (simplified approach)
+        business_name_clean = website['business_name'].replace(' ', '%20')
+        paypal_url = f"https://www.paypal.me/chemsedineassakour/{final_price}EUR"
         
-        if response.status_code == 201:
-            order_response = response.json()
-            order_id = order_response["id"]
-            
-            # Find approval URL
-            approval_url = None
-            for link in order_response.get("links", []):
-                if link.get("rel") == "approve":
-                    approval_url = link.get("href")
-                    break
-            
-            if not approval_url:
-                raise HTTPException(status_code=500, detail="PayPal approval URL not found")
-            
-            # Store order in database
-            order_data = {
-                "id": str(uuid.uuid4()),
-                "paypal_order_id": order_id,
-                "website_id": request.website_id,
-                "amount": final_price,
-                "referral_code": request.referral_code,
-                "status": "created",
-                "created_at": datetime.utcnow()
-            }
-            
-            await db.paypal_orders.insert_one(order_data)
-            
-            return PayPalOrderResponse(
-                order_id=order_id,
-                approval_url=approval_url,
-                amount=final_price
-            )
-        else:
-            raise HTTPException(status_code=500, detail=f"PayPal order creation failed: {response.text}")
-            
+        return PayPalOrderResponse(
+            payment_url=paypal_url,
+            amount=final_price,
+            website_id=request.website_id
+        )
+        
     except Exception as e:
-        logging.error(f"Error creating PayPal order: {str(e)}")
+        logging.error(f"Error creating PayPal payment URL: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.post("/paypal/capture-order/{order_id}")
-async def capture_paypal_order(order_id: str):
-    """Capture a PayPal order after user approval"""
+@api_router.post("/confirm-payment/{payment_id}")
+async def confirm_payment_manual(payment_id: str):
+    """Manually confirm payment (for demo purposes)"""
     try:
-        # Get PayPal access token
-        access_token = await get_paypal_access_token()
+        # Find payment record
+        payment = await db.payments.find_one({"id": payment_id})
+        if not payment:
+            raise HTTPException(status_code=404, detail="Payment not found")
         
-        # Capture the order
-        capture_url = f"{PAYPAL_BASE_URL}/v2/checkout/orders/{order_id}/capture"
+        # Update payment status
+        await db.payments.update_one(
+            {"id": payment_id},
+            {"$set": {"status": "completed", "confirmed_at": datetime.utcnow()}}
+        )
         
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {access_token}",
-            "PayPal-Request-Id": str(uuid.uuid4())
-        }
+        # Mark website as paid
+        await db.websites.update_one(
+            {"id": payment["website_id"]},
+            {"$set": {"paid": True}}
+        )
         
-        response = requests.post(capture_url, headers=headers)
-        
-        if response.status_code == 201:
-            capture_response = response.json()
-            
-            # Update order status in database
-            await db.paypal_orders.update_one(
-                {"paypal_order_id": order_id},
-                {"$set": {"status": "completed", "captured_at": datetime.utcnow()}}
+        # Mark referral code as used if applicable
+        if payment.get("referral_code"):
+            await db.referrals.update_one(
+                {"code": payment["referral_code"]},
+                {"$set": {"used": True}}
             )
-            
-            # Get order details
-            order = await db.paypal_orders.find_one({"paypal_order_id": order_id})
-            if order:
-                # Mark website as paid
-                await db.websites.update_one(
-                    {"id": order["website_id"]},
-                    {"$set": {"paid": True}}
-                )
-                
-                # Mark referral code as used if applicable
-                if order.get("referral_code"):
-                    await db.referrals.update_one(
-                        {"code": order["referral_code"]},
-                        {"$set": {"used": True}}
-                    )
-            
-            return {"message": "Payment captured successfully", "capture_id": capture_response["id"]}
-        else:
-            raise HTTPException(status_code=500, detail=f"PayPal capture failed: {response.text}")
-            
+        
+        return {"message": "Payment confirmed successfully", "website_id": payment["website_id"]}
+        
     except Exception as e:
-        logging.error(f"Error capturing PayPal order: {str(e)}")
+        logging.error(f"Error confirming payment: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/download/{website_id}")
