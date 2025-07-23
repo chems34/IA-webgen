@@ -230,19 +230,19 @@ function WebsiteGenerator() {
             {[1, 2, 3, 4].map((stepNumber) => (
               <div key={stepNumber} className="flex items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step >= stepNumber ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600'
+                  step >= stepNumber ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-400'
                 }`}>
                   {stepNumber}
                 </div>
                 {stepNumber < 4 && (
                   <div className={`w-12 h-0.5 ${
-                    step > stepNumber ? 'bg-indigo-600' : 'bg-gray-200'
+                    step > stepNumber ? 'bg-green-600' : 'bg-gray-700'
                   }`} />
                 )}
               </div>
             ))}
           </div>
-          <div className="flex justify-center mt-2 text-sm text-gray-600">
+          <div className="flex justify-center mt-2 text-sm text-gray-400">
             <div className="text-center">
               Création • Prévisualisation • Paiement • Téléchargement
             </div>
