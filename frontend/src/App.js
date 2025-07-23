@@ -186,35 +186,35 @@ function WebsiteGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-gray-900 shadow-sm border-b border-green-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <div className="text-2xl font-bold text-indigo-600">🤖 AI WebGen</div>
-              <div className="ml-4 text-sm text-gray-600">
+              <div className="text-2xl font-bold text-green-400">🤖 AI WebGen</div>
+              <div className="ml-4 text-sm text-gray-300">
                 <div className="font-medium">Créateur de sites web par Intelligence Artificielle</div>
-                <div className="text-xs text-green-500 italic mt-1">
+                <div className="text-xs text-green-400 italic mt-1">
                   ✨ "De l'idée au site web en 3 minutes - Qualité professionnelle garantie"
                 </div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               {referralCode && (
-                <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                <div className="bg-green-900 text-green-300 px-3 py-1 rounded-full text-sm border border-green-500">
                   🎉 Réduction de 5€ appliquée !
                 </div>
               )}
               <button
                 onClick={createReferralLink}
-                className="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors"
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
               >
                 📤 Partager pour économiser
               </button>
               <a
                 href="/admin"
-                className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                className="bg-gray-800 text-green-400 px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm border border-green-500"
               >
                 👑 Admin
               </a>
