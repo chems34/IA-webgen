@@ -251,11 +251,11 @@ function WebsiteGenerator() {
 
         {/* Step 1: Website Creation */}
         {step === 1 && (
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <div className="bg-gray-900 border border-green-500 rounded-xl shadow-lg p-8">
+            <h2 className="text-3xl font-bold text-white mb-2">
               Créez votre site web parfait
             </h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-300 mb-8">
               Décrivez votre projet et notre IA créera un site web professionnel pour vous
             </p>
 
