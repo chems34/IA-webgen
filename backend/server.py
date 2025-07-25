@@ -785,6 +785,58 @@ WEBSITE_TEMPLATES = {
     }
 }
 
+# History tracking functions
+async def log_history(action_type: ActionType, user_session: str = None, website_id: str = None, 
+                      business_name: str = None, details: dict = None, ip_address: str = None, user_agent: str = None):
+    """Log an action to the history"""
+    try:
+        history_entry = {
+            "id": str(uuid.uuid4()),
+            "action_type": action_type.value,
+            "user_session": user_session or str(uuid.uuid4()),
+            "website_id": website_id,
+            "business_name": business_name,
+            "details": details or {},
+            "timestamp": datetime.utcnow(),
+            "ip_address": ip_address,
+            "user_agent": user_agent
+        }
+        
+        await db.history.insert_one(history_entry)
+        logging.info(f"History logged: {action_type.value} for {business_name or website_id}")
+        
+    except Exception as e:
+        logging.error(f"Failed to log history: {str(e)}")
+
+async def get_user_history(user_session: str, limit: int = 50):
+    """Get history for a specific user session"""
+    try:
+        cursor = db.history.find({"user_session": user_session}).sort("timestamp", -1).limit(limit)
+        history = await cursor.to_list(length=None)
+        return history
+    except Exception as e:
+        logging.error(f"Failed to get user history: {str(e)}")
+        return []
+
+async def get_all_history(limit: int = 100, skip: int = 0):
+    """Get all history entries for admin"""
+    try:
+        cursor = db.history.find().sort("timestamp", -1).skip(skip).limit(limit)
+        history = await cursor.to_list(length=None)
+        
+        # Get total count
+        total_count = await db.history.count_documents({})
+        
+        return {
+            "history": history,
+            "total": total_count,
+            "limit": limit,
+            "skip": skip
+        }
+    except Exception as e:
+        logging.error(f"Failed to get all history: {str(e)}")
+        return {"history": [], "total": 0, "limit": limit, "skip": skip}
+
 # Template Generation Function
 def generate_from_template(template_key: str, business_name: str, primary_color: str, description: str = ""):
     """Generate website from template"""
