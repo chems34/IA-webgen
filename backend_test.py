@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, Any
 
 class AIWebGenTester:
-    def __init__(self, base_url="http://127.0.0.1:8001"):
+    def __init__(self, base_url="https://4050c07e-4f45-4312-9f54-7a61029439f8.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
