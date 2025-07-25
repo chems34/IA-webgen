@@ -1300,6 +1300,19 @@ async def create_paypal_payment_url(request: PayPalOrderRequest):
         business_name_clean = website['business_name'].replace(' ', '%20')
         paypal_url = f"https://www.paypal.me/chemsedineassakour/{final_price}EUR"
         
+        # Log history
+        await log_history(
+            action_type=ActionType.PAYMENT_CREATED,
+            website_id=request.website_id,
+            business_name=website.get('business_name'),
+            details={
+                "amount": final_price,
+                "payment_id": payment_id,
+                "referral_code": request.referral_code,
+                "original_price": website["price"]
+            }
+        )
+        
         return PayPalOrderResponse(
             payment_url=paypal_url,
             amount=final_price,
