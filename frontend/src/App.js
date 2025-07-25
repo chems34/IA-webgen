@@ -214,6 +214,12 @@ function WebsiteGenerator() {
                 📤 Partager pour économiser
               </button>
               <a
+                href="/history"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+              >
+                📜 Historique
+              </a>
+              <a
                 href="/admin"
                 className="bg-gray-800 text-green-400 px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm border border-green-500"
               >
