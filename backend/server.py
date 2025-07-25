@@ -1115,6 +1115,17 @@ async def preview_website(website_id: str):
     if not website:
         raise HTTPException(status_code=404, detail="Website not found")
     
+    # Log history
+    await log_history(
+        action_type=ActionType.WEBSITE_PREVIEWED,
+        website_id=website_id,
+        business_name=website.get('business_name'),
+        details={
+            "site_type": website.get('site_type'),
+            "price": website.get('price')
+        }
+    )
+    
     # Combine HTML, CSS, and JS into a single HTML page
     full_html = f"""<!DOCTYPE html>
 <html lang="en">
