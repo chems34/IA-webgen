@@ -92,6 +92,52 @@ class PayPalOrderResponse(BaseModel):
 
 # Website Templates
 WEBSITE_TEMPLATES = {
+    "simple": {
+        "name": "🌐 Simple",
+        "description": "Template simple et rapide",
+        "html": """
+        <div class="container">
+            <h1>{business_name}</h1>
+            <p>Bienvenue sur notre site web !</p>
+            <div class="content">
+                <h2>À propos</h2>
+                <p>Nous sommes une entreprise dédiée à l'excellence.</p>
+            </div>
+        </div>
+        """,
+        "css": """
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: {primary_color};
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: {primary_color};
+            margin-top: 30px;
+        }
+        p {
+            line-height: 1.6;
+            color: #333;
+        }
+        """,
+        "js": """
+        console.log('Website loaded for {business_name}');
+        """
+    },
     "restaurant": {
         "name": "🍽️ Restaurant",
         "description": "Template professionnel pour restaurants",
