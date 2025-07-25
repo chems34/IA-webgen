@@ -928,6 +928,19 @@ async def generate_website_from_template(request: TemplateWebsiteRequest):
         
         await db.websites.insert_one(website_data)
         
+        # Log history
+        await log_history(
+            action_type=ActionType.TEMPLATE_USED,
+            website_id=website_id,
+            business_name=request.business_name,
+            details={
+                "template_key": request.template_key,
+                "primary_color": request.primary_color,
+                "price": price,
+                "referral_code": request.referral_code
+            }
+        )
+        
         return WebsiteResponse(
             id=website_id,
             html_content=website_content["html"],
