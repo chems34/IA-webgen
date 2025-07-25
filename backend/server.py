@@ -1177,6 +1177,82 @@ async def create_referral_link():
         logging.error(f"Error creating referral link: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la création du lien de parrainage")
 
+# History API Routes
+@api_router.get("/history")
+async def get_history(limit: int = 50, skip: int = 0):
+    """Get all history entries (admin)"""
+    try:
+        result = await get_all_history(limit, skip)
+        return result
+    except Exception as e:
+        logging.error(f"Error getting history: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération de l'historique")
+
+@api_router.get("/history/user/{user_session}")
+async def get_user_history_api(user_session: str, limit: int = 50):
+    """Get history for specific user session"""
+    try:
+        history = await get_user_history(user_session, limit)
+        return {"history": history, "user_session": user_session}
+    except Exception as e:
+        logging.error(f"Error getting user history: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération de l'historique utilisateur")
+
+@api_router.get("/history/stats")
+async def get_history_stats():
+    """Get history statistics"""
+    try:
+        # Get action counts
+        pipeline = [
+            {"$group": {
+                "_id": "$action_type",
+                "count": {"$sum": 1}
+            }}
+        ]
+        
+        action_counts = await db.history.aggregate(pipeline).to_list(length=None)
+        
+        # Get today's activities
+        today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_count = await db.history.count_documents({
+            "timestamp": {"$gte": today_start}
+        })
+        
+        # Get total activities
+        total_count = await db.history.count_documents({})
+        
+        # Get recent activities
+        recent_activities = await db.history.find().sort("timestamp", -1).limit(10).to_list(length=None)
+        
+        return {
+            "action_counts": {item["_id"]: item["count"] for item in action_counts},
+            "today_activities": today_count,
+            "total_activities": total_count,
+            "recent_activities": recent_activities
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting history stats: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des statistiques")
+
+@api_router.delete("/history/cleanup")
+async def cleanup_old_history(days_old: int = 30):
+    """Clean up history older than specified days (admin)"""
+    try:
+        cutoff_date = datetime.utcnow() - timedelta(days=days_old)
+        result = await db.history.delete_many({
+            "timestamp": {"$lt": cutoff_date}
+        })
+        
+        return {
+            "message": f"Supprimé {result.deleted_count} entrées d'historique plus anciennes que {days_old} jours",
+            "deleted_count": result.deleted_count
+        }
+        
+    except Exception as e:
+        logging.error(f"Error cleaning up history: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors du nettoyage de l'historique")
+
 @api_router.post("/paypal/create-payment-url", response_model=PayPalOrderResponse)
 async def create_paypal_payment_url(request: PayPalOrderRequest):
     """Create a PayPal payment URL (simplified version)"""
