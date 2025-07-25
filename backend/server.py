@@ -1552,6 +1552,11 @@ async def get_user_history_api(user_session: str, limit: int = 50):
         logging.error(f"Error getting user history: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération de l'historique utilisateur")
 
+@api_router.get("/test")
+async def test_endpoint():
+    """Test endpoint"""
+    return {"test": "working"}
+
 @api_router.get("/history/stats")
 async def get_history_stats():
     """Get history statistics"""
