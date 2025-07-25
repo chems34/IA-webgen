@@ -178,30 +178,42 @@ async def get_all_history(limit: int = 100, skip: int = 0):
 # Template Generation Function
 def generate_from_template(template_key: str, business_name: str, primary_color: str, description: str = ""):
     """Generate website from template"""
-    if template_key not in WEBSITE_TEMPLATES:
-        return None
+    if template_key == "simple":
+        html_content = f"<div><h1>{business_name}</h1><p>Bienvenue sur notre site web!</p><div><h2>À propos</h2><p>Description: {description}</p></div></div>"
+        
+        css_content = f"""body {{
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }}
+        h1 {{
+            color: {primary_color};
+            text-align: center;
+        }}
+        h2 {{
+            color: {primary_color};
+        }}
+        p {{
+            color: #333;
+            line-height: 1.6;
+        }}
+        div {{
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+        }}"""
+        
+        js_content = f"console.log('Site web chargé pour {business_name}');"
+        
+        return {
+            "html": html_content,
+            "css": css_content,
+            "js": js_content
+        }
     
-    template = WEBSITE_TEMPLATES[template_key]
-    
-    # Replace placeholders in HTML
-    html_content = template["html"].format(
-        business_name=business_name,
-        primary_color=primary_color
-    )
-    
-    # Replace placeholders in CSS
-    css_content = template["css"].format(
-        primary_color=primary_color
-    )
-    
-    # JS content (no placeholders for now)
-    js_content = template["js"]
-    
-    return {
-        "html": html_content,
-        "css": css_content,
-        "js": js_content
-    }
+    return None
 
 class TemplateWebsiteRequest(BaseModel):
     template_key: str
