@@ -1557,8 +1557,8 @@ async def test_endpoint():
     """Test endpoint"""
     return {"test": "working"}
 
-@api_router.get("/history/stats")
-async def get_history_stats():
+@api_router.get("/history-stats")
+async def get_history_statistics():
     """Get history statistics"""
     return {
         "action_counts": {"referral_created": 1},
