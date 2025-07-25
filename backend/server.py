@@ -1079,6 +1079,21 @@ async def generate_website(request: WebsiteRequest):
         
         await db.websites.insert_one(website_data)
         
+        # Log history
+        await log_history(
+            action_type=ActionType.AI_GENERATION,
+            website_id=website_id,
+            business_name=request.business_name,
+            details={
+                "description": request.description,
+                "site_type": request.site_type,
+                "primary_color": request.primary_color,
+                "price": price,
+                "referral_code": request.referral_code,
+                "generation_method": "ai_gemini"
+            }
+        )
+        
         return WebsiteResponse(
             id=website_id,
             html_content=website_content["html"],
