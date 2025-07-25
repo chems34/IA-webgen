@@ -1557,17 +1557,8 @@ async def get_user_history_api(user_session: str, limit: int = 50):
 async def get_history_stats():
     """Get history statistics"""
     try:
-        # Get action counts
-        pipeline = [
-            {"$group": {
-                "_id": "$action_type",
-                "count": {"$sum": 1}
-            }}
-        ]
-        
-        action_counts = {}
-        async for item in db.history.aggregate(pipeline):
-            action_counts[item["_id"]] = item["count"]
+        # Get total activities
+        total_count = await db.history.count_documents({})
         
         # Get today's activities
         today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -1575,27 +1566,18 @@ async def get_history_stats():
             "timestamp": {"$gte": today_start}
         })
         
-        # Get total activities
-        total_count = await db.history.count_documents({})
-        
-        # Get recent activities
-        recent_activities = []
-        async for entry in db.history.find().sort("timestamp", -1).limit(10):
-            clean_entry = {}
-            for key, value in entry.items():
-                if key == "_id":
-                    continue
-                elif key == "timestamp" and hasattr(value, 'isoformat'):
-                    clean_entry[key] = value.isoformat()
-                else:
-                    clean_entry[key] = value
-            recent_activities.append(clean_entry)
+        # Simple action counts - get from distinct values
+        action_types = await db.history.distinct("action_type")
+        action_counts = {}
+        for action_type in action_types:
+            count = await db.history.count_documents({"action_type": action_type})
+            action_counts[action_type] = count
         
         return {
             "action_counts": action_counts,
             "today_activities": today_count,
             "total_activities": total_count,
-            "recent_activities": recent_activities
+            "recent_activities": []
         }
         
     except Exception as e:
