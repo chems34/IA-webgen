@@ -1166,6 +1166,16 @@ async def create_referral_link():
         
         await db.referrals.insert_one(referral_data)
         
+        # Log history
+        await log_history(
+            action_type=ActionType.REFERRAL_CREATED,
+            details={
+                "referral_code": referral_code,
+                "user_id": user_id,
+                "expires_at": expires_at.isoformat()
+            }
+        )
+        
         return {
             "referral_code": referral_code,
             "referral_link": f"https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com/?ref={referral_code}",
