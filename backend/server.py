@@ -822,7 +822,18 @@ async def get_all_history(limit: int = 100, skip: int = 0):
     """Get all history entries for admin"""
     try:
         cursor = db.history.find().sort("timestamp", -1).skip(skip).limit(limit)
-        history = await cursor.to_list(length=None)
+        history = []
+        async for entry in cursor:
+            # Convert ObjectId to string and clean entry
+            clean_entry = {}
+            for key, value in entry.items():
+                if key == "_id":
+                    continue  # Skip MongoDB ObjectId
+                elif key == "timestamp" and hasattr(value, 'isoformat'):
+                    clean_entry[key] = value.isoformat()
+                else:
+                    clean_entry[key] = value
+            history.append(clean_entry)
         
         # Get total count
         total_count = await db.history.count_documents({})
