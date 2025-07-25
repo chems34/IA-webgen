@@ -36,6 +36,27 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 # Pydantic Models
+class ActionType(str, Enum):
+    WEBSITE_GENERATED = "website_generated"
+    WEBSITE_PREVIEWED = "website_previewed"
+    PAYMENT_CREATED = "payment_created"
+    PAYMENT_CONFIRMED = "payment_confirmed"
+    WEBSITE_DOWNLOADED = "website_downloaded"
+    REFERRAL_CREATED = "referral_created"
+    TEMPLATE_USED = "template_used"
+    AI_GENERATION = "ai_generation"
+
+class HistoryEntry(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    action_type: ActionType
+    user_session: Optional[str] = None
+    website_id: Optional[str] = None
+    business_name: Optional[str] = None
+    details: Optional[dict] = None
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+
 class WebsiteRequest(BaseModel):
     description: str
     site_type: str  # 'vitrine', 'ecommerce', 'blog'
