@@ -49,7 +49,7 @@ function History() {
 
   const loadHistoryStats = async () => {
     try {
-      const response = await axios.get(`${API}/history/stats`);
+      const response = await axios.get(`${API}/history-stats`);
       setStats(response.data);
     } catch (error) {
       console.error("Error loading history stats:", error);
