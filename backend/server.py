@@ -1460,7 +1460,6 @@ async def get_admin_stats():
             total_revenue += website.get("price", 0)
         
         # Get websites created today
-        from datetime import datetime, timedelta
         today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         today_websites = await db.websites.count_documents({
             "created_at": {"$gte": today_start}
