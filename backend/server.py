@@ -812,7 +812,18 @@ async def get_user_history(user_session: str, limit: int = 50):
     """Get history for a specific user session"""
     try:
         cursor = db.history.find({"user_session": user_session}).sort("timestamp", -1).limit(limit)
-        history = await cursor.to_list(length=None)
+        history = []
+        async for entry in cursor:
+            # Convert ObjectId to string and clean entry
+            clean_entry = {}
+            for key, value in entry.items():
+                if key == "_id":
+                    continue  # Skip MongoDB ObjectId
+                elif key == "timestamp" and hasattr(value, 'isoformat'):
+                    clean_entry[key] = value.isoformat()
+                else:
+                    clean_entry[key] = value
+            history.append(clean_entry)
         return history
     except Exception as e:
         logging.error(f"Failed to get user history: {str(e)}")
