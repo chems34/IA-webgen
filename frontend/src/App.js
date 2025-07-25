@@ -598,6 +598,7 @@ function App() {
       <Routes>
         <Route path="/" element={<WebsiteGenerator />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/history" element={<History />} />
       </Routes>
     </BrowserRouter>
   );
