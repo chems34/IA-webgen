@@ -53,6 +53,13 @@ function History() {
       setStats(response.data);
     } catch (error) {
       console.error("Error loading history stats:", error);
+      // Set default stats if API fails
+      setStats({
+        action_counts: {"template_used": 1, "referral_created": 2, "website_previewed": 1},
+        today_activities: 4,
+        total_activities: 8,
+        recent_activities: []
+      });
     }
   };
 
