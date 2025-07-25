@@ -63,12 +63,20 @@ function AdminDashboard() {
               <h1 className="text-2xl font-bold text-white">📊 Dashboard Admin</h1>
               <p className="text-gray-400">AI WebGen - Tableau de bord administrateur</p>
             </div>
-            <button
-              onClick={() => window.location.href = "/"}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-lg"
-            >
-              🏠 Retour à l'app
-            </button>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => window.location.href = "/history"}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
+              >
+                📜 Historique
+              </button>
+              <button
+                onClick={() => window.location.href = "/"}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-lg"
+              >
+                🏠 Retour à l'app
+              </button>
+            </div>
           </div>
         </div>
       </div>
