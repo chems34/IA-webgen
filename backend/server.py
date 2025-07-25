@@ -1565,10 +1565,9 @@ async def get_history_stats():
             }}
         ]
         
-        action_counts_cursor = db.history.aggregate(pipeline)
-        action_counts = []
-        async for item in action_counts_cursor:
-            action_counts.append(item)
+        action_counts = {}
+        async for item in db.history.aggregate(pipeline):
+            action_counts[item["_id"]] = item["count"]
         
         # Get today's activities
         today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -1581,14 +1580,19 @@ async def get_history_stats():
         
         # Get recent activities
         recent_activities = []
-        cursor = db.history.find().sort("timestamp", -1).limit(10)
-        async for entry in cursor:
-            if "_id" in entry:
-                del entry["_id"]  # Remove MongoDB ObjectId
-            recent_activities.append(entry)
+        async for entry in db.history.find().sort("timestamp", -1).limit(10):
+            clean_entry = {}
+            for key, value in entry.items():
+                if key == "_id":
+                    continue
+                elif key == "timestamp" and hasattr(value, 'isoformat'):
+                    clean_entry[key] = value.isoformat()
+                else:
+                    clean_entry[key] = value
+            recent_activities.append(clean_entry)
         
         return {
-            "action_counts": {item["_id"]: item["count"] for item in action_counts},
+            "action_counts": action_counts,
             "today_activities": today_count,
             "total_activities": total_count,
             "recent_activities": recent_activities
