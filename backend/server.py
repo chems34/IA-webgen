@@ -14,6 +14,7 @@ import zipfile
 import io
 import base64
 from fastapi.responses import StreamingResponse
+from enum import Enum
 
 # Load environment variables
 ROOT_DIR = Path(__file__).parent
