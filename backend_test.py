@@ -196,6 +196,134 @@ class AIWebGenTester:
         else:
             self.log_test("History Cleanup", False, f"Status: {status}, Data: {data}")
 
+    def test_editing_endpoints(self):
+        """Test the new website editing functionality"""
+        print("\n🎨 Testing Website Editing System...")
+        
+        # First, we need a website to test with
+        if not self.test_data.get('website_id'):
+            # Create a test website first
+            self.test_generate_from_template()
+        
+        website_id = self.test_data.get('website_id')
+        if not website_id:
+            self.log_test("Website Editing Setup", False, "No website ID available for editing tests")
+            return
+        
+        # Test 1: Try to access editing for unpaid website (should fail)
+        success, data, status = self.make_request('GET', f'/edit/{website_id}')
+        if not success and status == 403:
+            self.log_test("Edit Unpaid Website (Expected Failure)", True, f"Correctly blocked with status {status}")
+        else:
+            self.log_test("Edit Unpaid Website (Expected Failure)", False, f"Should have failed with 403, got {status}")
+        
+        # Test 2: Mark website as paid using test endpoint
+        success, data, status = self.make_request('POST', f'/test/mark-paid/{website_id}')
+        if success and data.get('editable') == True:
+            self.log_test("Mark Website as Paid", True, f"Website {website_id} marked as paid")
+            self.test_data['paid_website_id'] = website_id
+        else:
+            self.log_test("Mark Website as Paid", False, f"Status: {status}, Data: {data}")
+            return
+        
+        # Test 3: Now try to access editing for paid website (should succeed)
+        success, data, status = self.make_request('GET', f'/edit/{website_id}')
+        if success and data.get('editable') == True and 'html_content' in data:
+            self.log_test("Get Website for Editing", True, f"Retrieved editable website data")
+            self.test_data['original_html'] = data['html_content']
+            self.test_data['original_css'] = data['css_content']
+        else:
+            self.log_test("Get Website for Editing", False, f"Status: {status}, Data: {data}")
+            return
+        
+        # Test 4: Save changes to the website
+        changes = {
+            "business_name": "Mon Site Test Modifié",
+            "primary_color": "#E74C3C",
+            "html_content": "<div><h1>Mon Site Test Modifié</h1><p>Site modifié avec succès!</p></div>",
+            "css_content": "body{font-family:Arial;background:#f0f0f0;color:#E74C3C;}"
+        }
+        
+        success, data, status = self.make_request('PUT', f'/edit/{website_id}', changes)
+        if success and 'message' in data and data.get('website_id') == website_id:
+            self.log_test("Save Website Changes", True, f"Changes saved successfully")
+        else:
+            self.log_test("Save Website Changes", False, f"Status: {status}, Data: {data}")
+        
+        # Test 5: Verify changes were saved by getting the website again
+        success, data, status = self.make_request('GET', f'/edit/{website_id}')
+        if success and data.get('business_name') == "Mon Site Test Modifié" and data.get('primary_color') == "#E74C3C":
+            self.log_test("Verify Saved Changes", True, f"Changes persisted correctly")
+        else:
+            self.log_test("Verify Saved Changes", False, f"Changes not persisted correctly")
+        
+        # Test 6: Test with the specific test data provided
+        test_website_id = "63d691e0-dcc3-44d5-8cc6-f1d9c08fca2b"
+        
+        # Mark the test website as paid
+        success, data, status = self.make_request('POST', f'/test/mark-paid/{test_website_id}')
+        if success:
+            self.log_test("Mark Test Website as Paid", True, f"Test website {test_website_id} marked as paid")
+            
+            # Try to access it for editing
+            success, data, status = self.make_request('GET', f'/edit/{test_website_id}')
+            if success and data.get('editable') == True:
+                self.log_test("Access Test Website for Editing", True, f"Test website accessible for editing")
+            else:
+                self.log_test("Access Test Website for Editing", False, f"Status: {status}, Data: {data}")
+        else:
+            self.log_test("Mark Test Website as Paid", False, f"Could not mark test website as paid: {status}")
+
+    def test_specific_test_case(self):
+        """Test the specific scenario mentioned in the request"""
+        print("\n🎯 Testing Specific Test Case...")
+        
+        # Test data from the request
+        test_website_id = "63d691e0-dcc3-44d5-8cc6-f1d9c08fca2b"
+        test_business_name = "Mon Site Test"
+        test_color = "#E74C3C"
+        
+        # Step 1: Generate a website with template "simple"
+        request_data = {
+            "template_key": "simple",
+            "business_name": test_business_name,
+            "primary_color": test_color
+        }
+        
+        success, data, status = self.make_request('POST', '/generate-from-template', request_data)
+        if success and 'id' in data:
+            generated_id = data['id']
+            self.log_test("Generate Test Website", True, f"Generated website: {generated_id}")
+            
+            # Step 2: Mark as paid
+            success, data, status = self.make_request('POST', f'/test/mark-paid/{generated_id}')
+            if success:
+                self.log_test("Mark Generated Website as Paid", True, f"Website marked as paid")
+                
+                # Step 3: Access editor
+                success, data, status = self.make_request('GET', f'/edit/{generated_id}')
+                if success and data.get('editable') == True:
+                    self.log_test("Access Editor for Generated Website", True, f"Editor accessible")
+                    
+                    # Step 4: Test modifications
+                    modifications = {
+                        "business_name": test_business_name,
+                        "primary_color": test_color,
+                        "html_content": f"<div><h1>{test_business_name}</h1><p>Site web modifié avec l'éditeur!</p><section><h2>Contact</h2><p>Contactez-nous!</p></section></div>"
+                    }
+                    
+                    success, data, status = self.make_request('PUT', f'/edit/{generated_id}', modifications)
+                    if success:
+                        self.log_test("Test Modifications", True, f"Modifications saved successfully")
+                    else:
+                        self.log_test("Test Modifications", False, f"Failed to save modifications: {status}")
+                else:
+                    self.log_test("Access Editor for Generated Website", False, f"Editor not accessible: {status}")
+            else:
+                self.log_test("Mark Generated Website as Paid", False, f"Failed to mark as paid: {status}")
+        else:
+            self.log_test("Generate Test Website", False, f"Failed to generate website: {status}")
+
     def verify_history_logging(self):
         """Verify that actions are being logged in history"""
         print("\n🔍 Verifying History Logging...")
