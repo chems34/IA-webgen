@@ -1023,6 +1023,63 @@ async def mark_website_as_paid(website_id: str):
         logging.error(f"Error marking website as paid: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/request-concierge-service")
+async def request_concierge_service(website_id: str, contact_email: str, preferred_domain: str):
+    """Request concierge hosting service"""
+    try:
+        # Get website details
+        website = await db.websites.find_one({"id": website_id})
+        if not website:
+            raise HTTPException(status_code=404, detail="Site web non trouvé")
+        
+        # Create concierge request
+        request_id = str(uuid.uuid4())
+        concierge_request = {
+            "id": request_id,
+            "website_id": website_id,
+            "business_name": website.get("business_name"),
+            "contact_email": contact_email,
+            "preferred_domain": preferred_domain,
+            "status": "pending",
+            "price": 49.0,
+            "created_at": datetime.utcnow(),
+            "includes": [
+                "Achat de domaine",
+                "Configuration hébergement", 
+                "Mise en ligne du site",
+                "Support 3 mois"
+            ]
+        }
+        
+        await db.concierge_requests.insert_one(concierge_request)
+        
+        # Log history
+        await log_history(
+            action_type=ActionType.REFERRAL_CREATED,  # We can reuse this or create new enum
+            website_id=website_id,
+            business_name=website.get("business_name"),
+            details={
+                "service": "concierge_hosting",
+                "contact_email": contact_email,
+                "preferred_domain": preferred_domain,
+                "price": 49.0,
+                "request_id": request_id
+            }
+        )
+        
+        return {
+            "message": "Demande de service concierge enregistrée !",
+            "request_id": request_id,
+            "status": "pending",
+            "next_steps": "Nous vous contacterons dans les 24h pour finaliser votre domaine et mettre votre site en ligne.",
+            "price": 49.0,
+            "includes": concierge_request["includes"]
+        }
+        
+    except Exception as e:
+        logging.error(f"Error requesting concierge service: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/download-hosting-guide")
 async def download_hosting_guide():
     """Download hosting guide for customers"""
