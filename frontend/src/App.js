@@ -263,9 +263,47 @@ function WebsiteGenerator() {
             <h2 className="text-3xl font-bold text-white mb-2">
               Créez votre site web parfait
             </h2>
-            <p className="text-gray-300 mb-8">
+            <p className="text-gray-300 mb-6">
               Décrivez votre projet et notre IA créera un site web professionnel pour vous
             </p>
+
+            {/* NEW - Editing Info Banner on Homepage */}
+            <div className="bg-gradient-to-r from-green-900 to-blue-900 border border-green-400 rounded-lg p-6 mb-8">
+              <div className="flex items-center justify-center space-x-3 mb-4">
+                <span className="text-3xl">🎨</span>
+                <h3 className="text-xl font-bold text-green-200">
+                  ✨ NOUVEAU : Éditeur Intégré Après Achat !
+                </h3>
+                <span className="text-3xl">✨</span>
+              </div>
+              <div className="text-center mb-4">
+                <p className="text-green-100 text-lg mb-3">
+                  Une fois votre site acheté, <strong className="text-green-200">modifiez-le librement</strong> avec notre éditeur intégré !
+                </p>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div className="bg-green-800 bg-opacity-50 p-3 rounded-lg">
+                    <div className="text-2xl mb-2">🎨</div>
+                    <div className="font-semibold text-green-200">Couleurs & Design</div>
+                    <div className="text-green-100">Changez couleurs, polices, mise en page</div>
+                  </div>
+                  <div className="bg-blue-800 bg-opacity-50 p-3 rounded-lg">
+                    <div className="text-2xl mb-2">📝</div>
+                    <div className="font-semibold text-blue-200">Contenu & Textes</div>
+                    <div className="text-blue-100">Modifiez textes, ajoutez sections</div>
+                  </div>
+                  <div className="bg-purple-800 bg-opacity-50 p-3 rounded-lg">
+                    <div className="text-2xl mb-2">📞</div>
+                    <div className="font-semibold text-purple-200">Contact & Galerie</div>
+                    <div className="text-purple-100">Ajoutez contact, témoignages, photos</div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-center">
+                <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-6 py-2 rounded-full font-medium">
+                  🚀 Personnalisez votre site autant que vous voulez !
+                </div>
+              </div>
+            </div>
 
             <div className="space-y-6">
               <div>
