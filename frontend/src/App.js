@@ -687,105 +687,108 @@ function WebsiteGenerator() {
               </div>
 
               {/* NEW - Hosting & Domain Options */}
-              <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6">
+              <div className="bg-gradient-to-r from-gray-50 to-blue-50 border border-gray-200 rounded-lg p-6">
                 <div className="text-center mb-4">
-                  <h3 className="text-lg font-bold text-purple-900 mb-2">
-                    🌐 Besoin d'hébergement pour mettre votre site en ligne ?
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                    🎯 Une dernière étape... Comment rendre votre site accessible ?
                   </h3>
-                  <p className="text-purple-700 text-sm">
-                    Choisissez votre solution pour rendre votre site accessible sur internet
+                  <p className="text-gray-600 text-sm">
+                    Vous avez maintenant un site professionnel. Nos clients choisissent généralement l'une de ces options :
                   </p>
                 </div>
                 
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div className="bg-white p-4 rounded-lg border border-purple-200">
+                  <div className="bg-white p-4 rounded-lg border border-orange-200 relative">
+                    <div className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
+                      78% choisissent
+                    </div>
                     <div className="flex items-center space-x-2 mb-3">
                       <span className="text-2xl">🤝</span>
-                      <h4 className="font-bold text-purple-800">Service Concierge</h4>
-                      <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-bold">POPULAIRE</span>
+                      <h4 className="font-bold text-gray-800">Nous faisons tout</h4>
                     </div>
-                    <p className="text-sm text-purple-700 mb-3">
-                      Nous mettons votre site en ligne pour vous ! Zero stress, tout est fait.
+                    <p className="text-sm text-gray-600 mb-3">
+                      Comme la plupart, <strong>laissez-nous vous éviter le stress</strong>. 
+                      Domaine + hébergement + site en ligne.
                     </p>
-                    <div className="text-xs text-purple-600 mb-3">
-                      • Nous achetons domaine pour vous<br/>
-                      • Nous configurons l'hébergement<br/>
-                      • Nous mettons votre site en ligne<br/>
-                      • Support pendant 3 mois inclus
+                    <div className="text-xs text-gray-500 mb-3">
+                      Fini les complications techniques.<br/>
+                      Votre site sera en ligne demain.
                     </div>
                     <div className="text-center">
-                      <div className="text-purple-800 font-bold mb-2">49€ tout compris</div>
+                      <div className="text-gray-800 font-bold mb-1">49€ <span className="text-sm text-gray-500">tout compris</span></div>
+                      <div className="text-xs text-green-600 mb-2">💡 Support inclus 3 mois</div>
                       <button 
                         onClick={() => {
-                          const email = prompt("Votre email de contact :");
-                          const domain = prompt("Domaine souhaité (ex: mon-salon.com) :");
+                          const email = prompt("Votre email pour vous contacter :");
+                          const domain = prompt("Quel nom de domaine souhaitez-vous ? (ex: mon-salon.com)");
                           if (email && domain) {
                             axios.post(`${API}/request-concierge-service`, {
                               website_id: generatedWebsite.id,
                               contact_email: email,
                               preferred_domain: domain
                             }).then(response => {
-                              alert(`✅ ${response.data.message}\n\n${response.data.next_steps}`);
+                              alert(`✅ Parfait ! Nous vous contactons dans 24h.\n\n📧 Surveillez votre email : ${email}\n🌐 Domaine réservé : ${domain}`);
                             }).catch(error => {
-                              alert("❌ Erreur lors de la demande. Réessayez.");
+                              alert("❌ Erreur. Réessayez ou contactez-nous.");
                             });
                           }
                         }}
-                        className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 text-sm"
+                        className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 text-sm font-medium"
                       >
-                        🚀 Je veux ce service
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center space-x-2 mb-3">
-                      <span className="text-2xl">⚡</span>
-                      <h4 className="font-bold text-green-800">Auto-Hébergement</h4>
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-bold">BIENTÔT</span>
-                    </div>
-                    <p className="text-sm text-green-700 mb-3">
-                      Un clic et votre site est en ligne ! Domaine + hébergement automatique.
-                    </p>
-                    <div className="text-xs text-green-600 mb-3">
-                      • Domaine de votre choix<br/>
-                      • Hébergement rapide et sécurisé<br/>
-                      • Mise en ligne instantanée<br/>
-                      • Gestion depuis l'interface
-                    </div>
-                    <div className="text-center">
-                      <div className="text-green-800 font-bold mb-2">À partir de 8€/mois</div>
-                      <button disabled className="w-full bg-gray-400 text-gray-600 py-2 px-4 rounded-lg text-sm cursor-not-allowed">
-                        🔜 Bientôt disponible
+                        🚀 Oui, faites-le pour moi
                       </button>
                     </div>
                   </div>
                   
                   <div className="bg-white p-4 rounded-lg border border-blue-200">
                     <div className="flex items-center space-x-2 mb-3">
-                      <span className="text-2xl">🛠️</span>
-                      <h4 className="font-bold text-blue-800">Guide DIY</h4>
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-bold">GRATUIT</span>
+                      <span className="text-2xl">📚</span>
+                      <h4 className="font-bold text-gray-800">Je me débrouille</h4>
                     </div>
-                    <p className="text-sm text-blue-700 mb-3">
-                      Instructions détaillées pour héberger vous-même votre site.
+                    <p className="text-sm text-gray-600 mb-3">
+                      Vous êtes technique ? Voici notre guide pas-à-pas avec 6 solutions d'hébergement.
                     </p>
-                    <div className="text-xs text-blue-600 mb-3">
-                      • Guide étape par étape<br/>
-                      • 6 options d'hébergement<br/>
-                      • De gratuit à professionnel<br/>
-                      • Checklist complète
+                    <div className="text-xs text-gray-500 mb-3">
+                      Netlify, GitHub, Hostinger, OVH...<br/>
+                      Instructions détaillées incluses.
                     </div>
                     <div className="text-center">
-                      <div className="text-blue-800 font-bold mb-2">Guide gratuit</div>
+                      <div className="text-gray-800 font-bold mb-2">Gratuit</div>
                       <button 
                         onClick={() => window.open(`${API}/download-hosting-guide`, '_blank')}
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm"
+                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 text-sm"
                       >
                         📚 Télécharger le guide
                       </button>
                     </div>
                   </div>
+                  
+                  <div className="bg-white p-4 rounded-lg border border-gray-200 opacity-75">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <span className="text-2xl">⚡</span>
+                      <h4 className="font-bold text-gray-800">Solution automatique</h4>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Un clic et c'est en ligne ! Notre solution automatique arrive bientôt.
+                    </p>
+                    <div className="text-xs text-gray-500 mb-3">
+                      Interface simple, déploiement instant.<br/>
+                      <strong>50 premiers clients : -50%</strong>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-gray-600 mb-2">~8€/mois</div>
+                      <button disabled className="w-full bg-gray-300 text-gray-500 py-2 px-4 rounded-lg text-sm cursor-not-allowed">
+                        🔜 Bientôt (inscrivez-vous)
+                      </button>  
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-center mt-4">
+                  <p className="text-xs text-gray-500">
+                    💡 <strong>Conseil :</strong> La majorité de nos clients prennent le service complet pour éviter les complications.
+                    <br/>Vous pouvez toujours éditer votre site après la mise en ligne !
+                  </p>
                 </div>
               </div>
 
