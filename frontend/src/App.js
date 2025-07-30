@@ -604,6 +604,23 @@ function WebsiteGenerator() {
                 📥 Télécharger mon site web (ZIP)
               </button>
 
+              {/* NEW - Edit Button */}
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center justify-center space-x-2 mb-3">
+                  <span className="text-2xl">🎨</span>
+                  <h3 className="font-semibold text-green-800">Personnalisez maintenant votre site !</h3>
+                </div>
+                <p className="text-green-700 text-sm mb-3">
+                  Utilisez notre éditeur intégré pour modifier : couleurs, textes, sections, contact, galerie...
+                </p>
+                <button
+                  onClick={() => window.location.href = `/edit/${generatedWebsite.id}`}
+                  className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                >
+                  ✏️ Éditer mon site maintenant
+                </button>
+              </div>
+
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-blue-900 font-medium mb-2">Que contient votre téléchargement ?</p>
                 <ul className="text-blue-700 text-sm space-y-1">
