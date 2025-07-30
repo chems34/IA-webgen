@@ -374,6 +374,11 @@ class AIWebGenTester:
         self.test_preview_website()
         self.test_create_payment()
         
+        # NEW: Website editing tests
+        print("\n🎨 Testing Website Editing System...")
+        self.test_editing_endpoints()
+        self.test_specific_test_case()
+        
         # History system tests
         print("\n📜 Testing History System...")
         self.test_history_endpoints()
@@ -394,7 +399,7 @@ class AIWebGenTester:
         print(f"📊 Test Results: {self.tests_passed}/{self.tests_run} tests passed")
         
         if self.tests_passed == self.tests_run:
-            print("🎉 All tests passed! History system is working correctly.")
+            print("🎉 All tests passed! Website editing system is working correctly.")
             return 0
         else:
             print(f"⚠️  {self.tests_run - self.tests_passed} tests failed. Check the issues above.")
