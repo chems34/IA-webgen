@@ -1970,57 +1970,13 @@ async def request_concierge_service_automated(request: ConciergeRequest):
 
 @api_router.post("/concierge/webhook/stripe")
 async def concierge_stripe_webhook(request: Request):
-    """Webhook Stripe pour automatisation complète de la conciergerie"""
+    """Webhook Stripe pour automatisation complète de la conciergerie (Disabled - Stripe integration removed)"""
     try:
-        # Obtenir le body et signature
-        body = await request.body()
-        stripe_signature = request.headers.get("Stripe-Signature")
-        
-        # Utiliser Stripe API du système
-        stripe_api_key = os.environ.get('STRIPE_API_KEY', os.environ.get('STRIPE_SECRET_KEY'))
-        
-        if not stripe_api_key:
-            raise HTTPException(status_code=500, detail="Stripe API key not configured")
-        
-        # Initialiser Stripe checkout
-        host_url = "https://bda0d49d-4e16-4c2f-b3a8-78fbd2ddda32.preview.emergentagent.com"
-        webhook_url = f"{host_url}/api/concierge/webhook/stripe"
-        stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
-        
-        # Traiter le webhook
-        webhook_response = await stripe_checkout.handle_webhook(body, stripe_signature)
-        
-        logging.info(f"🔔 Webhook Stripe reçu: {webhook_response.event_type}")
-        
-        # Si c'est un paiement réussi
-        if webhook_response.event_type == "checkout.session.completed" and webhook_response.payment_status == "paid":
-            # Mettre à jour la transaction
-            await db.payment_transactions.update_one(
-                {"session_id": webhook_response.session_id},
-                {"$set": {
-                    "payment_status": "paid",
-                    "completed_at": datetime.utcnow(),
-                    "event_id": webhook_response.event_id
-                }}
-            )
-            
-            # Récupérer les métadonnées pour l'automatisation
-            metadata = webhook_response.metadata
-            if metadata and metadata.get('service') == 'concierge_automation':
-                # Démarrer l'automatisation complète
-                automation_result = await concierge_automation.execute_full_automation(
-                    metadata['website_id'],
-                    metadata['domain'],
-                    metadata['business_name'],
-                    metadata['client_email']
-                )
-                
-                logging.info(f"🤖 Automatisation lancée pour {metadata['domain']}: {automation_result}")
-        
-        return {"status": "success", "message": "Webhook traité"}
+        logging.info("🔔 Stripe webhook called but Stripe integration is disabled")
+        return {"status": "disabled", "message": "Stripe integration has been removed"}
         
     except Exception as e:
-        logging.error(f"❌ Erreur webhook Stripe: {str(e)}")
+        logging.error(f"❌ Erreur webhook: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/concierge/payment/status/{session_id}")
