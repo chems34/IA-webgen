@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Test Conciergerie Automatisée</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .demo-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        .button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .status.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+        }
+        .status.pending {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #FFC107;
+        }
+        .status.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #F44336;
+        }
+        .timeline {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .timeline-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #4CAF50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 16px;
+        }
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Test Conciergerie Automatisée</h1>
+            <p>Testez l'automatisation complète avec Stripe intégré</p>
+        </div>
+
+        <div class="demo-section">
+            <h3>📋 Simuler une Demande Automatisée</h3>
+            <div class="form-group">
+                <label>Nom du business :</label>
+                <input type="text" id="businessName" placeholder="Ex: Café La Pause" value="Café La Pause">
+            </div>
+            <div class="form-group">
+                <label>Email de contact :</label>
+                <input type="email" id="contactEmail" placeholder="contact@cafelapause.com" value="test@example.com">
+            </div>
+            <div class="form-group">
+                <label>Domaine souhaité :</label>
+                <input type="text" id="domain" placeholder="cafelapause.com" value="cafelapause.com">
+            </div>
+            <div class="form-group">
+                <label>Urgence :</label>
+                <select id="urgency">
+                    <option value="normal">Normal (49€ - 2-4h)</option>
+                    <option value="urgent">Urgent (59€ - 24h)</option>
+                </select>
+            </div>
+            <button class="button" onclick="testConciergeAutomation()">
+                🚀 Lancer l'Automatisation Complète
+            </button>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div class="timeline">
+            <h3>⏰ Processus Automatique (2-4h)</h3>
+            <div class="timeline-item">
+                <div class="timeline-icon">🤖</div>
+                <div>
+                    <strong>0-5 min :</strong> Vérification domaine + génération paiement Stripe automatique
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-icon">💳</div>
+                <div>
+                    <strong>Après paiement :</strong> Démarrage automatique (webhook Stripe)
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-icon">⚡</div>
+                <div>
+                    <strong>0-2h :</strong> Achat domaine + hébergement automatique
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-icon">🌐</div>
+                <div>
+                    <strong>2-4h max :</strong> Site en ligne + email de confirmation
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>🧪 Tests Rapides</h3>
+            <button class="button" onclick="testDemo()">
+                🎬 Démonstration Complète
+            </button>
+            <button class="button" onclick="checkBackend()">
+                🔧 Vérifier Backend
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API = 'https://bda0d49d-4e16-4c2f-b3a8-78fbd2ddda32.preview.emergentagent.com/api';
+
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+        }
+
+        async function testConciergeAutomation() {
+            updateStatus('🤖 Démarrage de l\'automatisation...', 'pending');
+            
+            try {
+                // Créer d'abord un site web
+                const websiteResponse = await fetch(`${API}/generate-website`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        business_name: document.getElementById('businessName').value,
+                        description: "Site web généré pour test automatisation",
+                        site_type: "restaurant",
+                        primary_color: "#4CAF50"
+                    })
+                });
+
+                if (!websiteResponse.ok) {
+                    throw new Error('Erreur génération site');
+                }
+
+                const websiteData = await websiteResponse.json();
+                updateStatus(`✅ Site créé: ${websiteData.website_id}`, 'success');
+
+                // Maintenant demander la conciergerie automatisée
+                const conciergeResponse = await fetch(`${API}/request-concierge-service`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        website_id: websiteData.website_id,
+                        contact_email: document.getElementById('contactEmail').value,
+                        preferred_domain: document.getElementById('domain').value,
+                        urgency: document.getElementById('urgency').value
+                    })
+                });
+
+                if (!conciergeResponse.ok) {
+                    throw new Error('Erreur demande conciergerie');
+                }
+
+                const conciergeData = await conciergeResponse.json();
+                
+                if (conciergeData.status === "domain_unavailable") {
+                    updateStatus(`❌ Domaine indisponible. Alternatives: ${conciergeData.alternatives.join(', ')}`, 'error');
+                    return;
+                }
+
+                updateStatus(`🎉 Automatisation lancée ! Prix: ${conciergeData.price}€ - Délai: ${conciergeData.estimated_completion}`, 'success');
+                
+                // Si lien de paiement disponible, l'afficher
+                if (conciergeData.payment_link) {
+                    setTimeout(() => {
+                        if (confirm('Ouvrir le lien de paiement Stripe ?')) {
+                            window.open(conciergeData.payment_link, '_blank');
+                        }
+                    }, 2000);
+                }
+
+            } catch (error) {
+                updateStatus(`❌ Erreur: ${error.message}`, 'error');
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function testDemo() {
+            updateStatus('🎬 Lancement démonstration...', 'pending');
+            
+            try {
+                const response = await fetch(`${API}/test/concierge/demo`, {
+                    method: 'POST'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur démonstration');
+                }
+
+                const data = await response.json();
+                updateStatus(`🎉 Démo réussie ! Site créé: ${data.demo_data.website_created} - ${data.timeline}`, 'success');
+                
+                console.log('Résultat démo:', data);
+
+            } catch (error) {
+                updateStatus(`❌ Erreur démo: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkBackend() {
+            updateStatus('🔧 Vérification backend...', 'pending');
+            
+            try {
+                const response = await fetch(`${API}/websites/stats`);
+                
+                if (!response.ok) {
+                    throw new Error('Backend non accessible');
+                }
+
+                const data = await response.json();
+                updateStatus(`✅ Backend opérationnel ! ${data.total_websites} sites créés`, 'success');
+
+            } catch (error) {
+                updateStatus(`❌ Backend inaccessible: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-test au chargement
+        window.onload = function() {
+            updateStatus('🤖 Système d\'automatisation prêt !', 'success');
+        };
+    </script>
+</body>
+</html>
