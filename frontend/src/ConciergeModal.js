@@ -318,17 +318,17 @@ function ConciergeModal({ isOpen, onClose, websiteId, websiteName }) {
 
             {paymentLink && (
               <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-lg p-4 mb-6">
-                <h4 className="font-bold text-white mb-3">💳 Paiement Sécurisé</h4>
+                <h4 className="font-bold text-white mb-3">💳 Paiement Sécurisé PayPal</h4>
                 <a
                   href={paymentLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block bg-white text-green-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
                 >
-                  💳 Payer {formData.urgency === 'urgent' ? '59€' : '49€'} et Lancer l'Automatisation
+                  💳 Payer {formData.urgency === 'urgent' ? '59€' : '49€'} via PayPal
                 </a>
                 <p className="text-white text-sm mt-2">
-                  Automatisation complète démarrera immédiatement après paiement
+                  Automatisation complète démarrera après confirmation PayPal
                 </p>
               </div>
             )}
