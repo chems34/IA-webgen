@@ -61,11 +61,11 @@ function ConciergeModal({ isOpen, onClose, websiteId, websiteName }) {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold flex items-center">
-                <span className="mr-3">🤝</span>
-                Service Concierge - Nous faisons tout pour vous !
+                <span className="mr-3">🤖</span>
+                Service Concierge Automatisé - Mise en ligne en 2-4h !
               </h2>
               <p className="text-orange-100 mt-1">
-                Laissez-nous mettre "{websiteName}" en ligne sans stress
+                Notre IA met "{websiteName}" en ligne automatiquement, sans stress
               </p>
             </div>
             <button 
