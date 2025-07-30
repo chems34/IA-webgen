@@ -788,6 +788,12 @@ function WebsiteGenerator() {
                 </div>
                 
                 <div className="text-center mt-4">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-green-800">
+                      💬 <em>"J'ai pris le service concierge et 24h après mon site était en ligne. 
+                      Zéro stress, je recommande !"</em> - <strong>Marie L.</strong>, coiffeuse
+                    </p>
+                  </div>
                   <p className="text-xs text-gray-500">
                     💡 <strong>Conseil :</strong> La majorité de nos clients prennent le service complet pour éviter les complications.
                     <br/>Vous pouvez toujours éditer votre site après la mise en ligne !
