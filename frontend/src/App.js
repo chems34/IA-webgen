@@ -680,24 +680,50 @@ function WebsiteGenerator() {
                   </p>
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-3 gap-4">
                   <div className="bg-white p-4 rounded-lg border border-purple-200">
                     <div className="flex items-center space-x-2 mb-3">
-                      <span className="text-2xl">🚀</span>
-                      <h4 className="font-bold text-purple-800">Service Complet</h4>
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-bold">BIENTÔT</span>
+                      <span className="text-2xl">🤝</span>
+                      <h4 className="font-bold text-purple-800">Service Concierge</h4>
+                      <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-bold">POPULAIRE</span>
                     </div>
                     <p className="text-sm text-purple-700 mb-3">
-                      Nous nous occupons de tout ! Domaine + hébergement + mise en ligne automatique.
+                      Nous mettons votre site en ligne pour vous ! Zero stress, tout est fait.
                     </p>
-                    <div className="text-xs text-purple-600">
-                      • Domaine inclus (ex: monsalon.com)<br/>
-                      • Hébergement rapide et sécurisé<br/>
-                      • Site en ligne en 5 minutes<br/>
-                      • Support technique inclus
+                    <div className="text-xs text-purple-600 mb-3">
+                      • Nous achetons domaine pour vous<br/>
+                      • Nous configurons l'hébergement<br/>
+                      • Nous mettons votre site en ligne<br/>
+                      • Support pendant 3 mois inclus
                     </div>
-                    <div className="mt-3 text-center">
-                      <span className="text-purple-800 font-bold">À partir de 5€/mois</span>
+                    <div className="text-center">
+                      <div className="text-purple-800 font-bold mb-2">49€ tout compris</div>
+                      <button className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 text-sm">
+                        🚀 Je veux ce service
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <span className="text-2xl">⚡</span>
+                      <h4 className="font-bold text-green-800">Auto-Hébergement</h4>
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-bold">BIENTÔT</span>
+                    </div>
+                    <p className="text-sm text-green-700 mb-3">
+                      Un clic et votre site est en ligne ! Domaine + hébergement automatique.
+                    </p>
+                    <div className="text-xs text-green-600 mb-3">
+                      • Domaine de votre choix<br/>
+                      • Hébergement rapide et sécurisé<br/>
+                      • Mise en ligne instantanée<br/>
+                      • Gestion depuis l'interface
+                    </div>
+                    <div className="text-center">
+                      <div className="text-green-800 font-bold mb-2">À partir de 8€/mois</div>
+                      <button disabled className="w-full bg-gray-400 text-gray-600 py-2 px-4 rounded-lg text-sm cursor-not-allowed">
+                        🔜 Bientôt disponible
+                      </button>
                     </div>
                   </div>
                   
@@ -710,13 +736,14 @@ function WebsiteGenerator() {
                     <p className="text-sm text-blue-700 mb-3">
                       Instructions détaillées pour héberger vous-même votre site.
                     </p>
-                    <div className="text-xs text-blue-600">
+                    <div className="text-xs text-blue-600 mb-3">
                       • Guide étape par étape<br/>
-                      • Recommandations d'hébergeurs<br/>
-                      • Aide à la configuration<br/>
-                      • Liste de vérification
+                      • 6 options d'hébergement<br/>
+                      • De gratuit à professionnel<br/>
+                      • Checklist complète
                     </div>
-                    <div className="mt-3">
+                    <div className="text-center">
+                      <div className="text-blue-800 font-bold mb-2">Guide gratuit</div>
                       <button 
                         onClick={() => window.open(`${API}/download-hosting-guide`, '_blank')}
                         className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm"
