@@ -1705,10 +1705,71 @@ async def get_user_history_api(user_session: str, limit: int = 50):
         logging.error(f"Error getting user history: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération de l'historique utilisateur")
 
-@api_router.get("/test")
-async def test_endpoint():
-    """Test endpoint"""
-    return {"test": "working"}
+@api_router.post("/test/concierge/demo")
+async def demo_concierge_automation():
+    """Démonstration complète de l'automatisation de la conciergerie"""
+    try:
+        # Créer un site de démo
+        website_id = str(uuid.uuid4())
+        demo_website = {
+            "id": website_id,
+            "business_name": "Salon Belle Époque",
+            "description": "Salon de coiffure moderne et élégant",
+            "site_type": "salon",
+            "primary_color": "#E91E63",
+            "html_content": "<div><h1>Salon Belle Époque</h1><p>Votre beauté, notre passion</p></div>",
+            "css_content": "body { font-family: Arial; background: #f8f9fa; } h1 { color: #E91E63; }",
+            "js_content": "console.log('Salon Belle Époque chargé');",
+            "price": 15.0,
+            "created_at": datetime.utcnow(),
+            "paid": True
+        }
+        
+        await db.websites.insert_one(demo_website)
+        
+        # Simuler une demande de conciergerie automatisée
+        request_data = {
+            "website_id": website_id,
+            "business_name": "Salon Belle Époque",
+            "contact_email": "demo@salon-belle-epoque.com",
+            "preferred_domain": "salon-belle-epoque.com",
+            "urgency": "normal"
+        }
+        
+        # Traitement automatique
+        automation_result = await concierge_automation.process_concierge_request(request_data)
+        
+        # Simuler la completion automatique après paiement
+        completion_result = await concierge_automation.execute_full_automation(
+            website_id, 
+            "salon-belle-epoque.com", 
+            "Salon Belle Époque", 
+            "demo@salon-belle-epoque.com"
+        )
+        
+        return {
+            "message": "🤖 Démonstration de l'automatisation complète",
+            "demo_data": {
+                "website_created": website_id,
+                "automation_processing": automation_result,
+                "completion_simulation": completion_result
+            },
+            "process_steps": [
+                "✅ Site web créé automatiquement",
+                "✅ Domaine vérifié automatiquement", 
+                "✅ Lien de paiement généré automatiquement",
+                "✅ Email de confirmation envoyé automatiquement",
+                "✅ Déploiement simulé automatiquement",
+                "✅ Email de livraison envoyé automatiquement"
+            ],
+            "timeline": "Processus complet en 2-4h automatiquement",
+            "next_steps": "Site en ligne à https://salon-belle-epoque.com",
+            "support": "Support automatique 3 mois inclus"
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur démo automatisation: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/history-stats")
 async def get_history_statistics():
