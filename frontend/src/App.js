@@ -332,18 +332,33 @@ function WebsiteGenerator() {
                 </p>
                 <div className="grid md:grid-cols-1 gap-3">
                   <button
-                    onClick={() => {
-                      setFormData({
-                        ...formData,
-                        site_type: "simple",
-                        description: `Site web professionnel pour ${formData.business_name || 'mon entreprise'}`
-                      });
-                      generateWebsite();
+                    onClick={async () => {
+                      if (!formData.business_name) {
+                        alert("⚠️ Veuillez d'abord saisir le nom de votre entreprise");
+                        return;
+                      }
+                      
+                      setLoading(true);
+                      try {
+                        const response = await axios.post(`${API}/generate-from-template`, {
+                          template_key: "simple",
+                          business_name: formData.business_name,
+                          primary_color: "#4A90E2"
+                        });
+                        
+                        setGeneratedWebsite(response.data);
+                        setStep(2);
+                      } catch (error) {
+                        console.error("Error:", error);
+                        alert("❌ Erreur lors de la génération. Réessayez.");
+                      } finally {
+                        setLoading(false);
+                      }
                     }}
                     className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                    disabled={!formData.business_name}
+                    disabled={!formData.business_name || loading}
                   >
-                    🚀 Créer mon site maintenant (Template Pro)
+                    {loading ? "⏳ Génération..." : "🚀 Créer mon site maintenant (Template Pro)"}
                   </button>
                 </div>
                 <p className="text-xs text-blue-600 mt-2">
