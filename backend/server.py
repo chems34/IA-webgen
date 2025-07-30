@@ -913,6 +913,97 @@ async def cleanup_old_history(days_old: int = 30):
         logging.error(f"Error cleaning up history: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors du nettoyage de l'historique")
 
+# Website Editing Endpoints
+@api_router.get("/edit/{website_id}")
+async def get_website_for_editing(website_id: str):
+    """Get website data for editing (only if paid)"""
+    try:
+        website = await db.websites.find_one({"id": website_id})
+        if not website:
+            raise HTTPException(status_code=404, detail="Site web non trouvé")
+        
+        if not website.get("paid", False):
+            raise HTTPException(status_code=403, detail="Site non payé - Édition non autorisée")
+        
+        # Log history
+        await log_history(
+            action_type=ActionType.WEBSITE_PREVIEWED,
+            website_id=website_id,
+            business_name=website.get('business_name'),
+            details={"action": "edit_mode_accessed"}
+        )
+        
+        return {
+            "id": website["id"],
+            "business_name": website["business_name"],
+            "html_content": website["html_content"],
+            "css_content": website["css_content"],
+            "js_content": website["js_content"],
+            "site_type": website.get("site_type", "simple"),
+            "primary_color": website.get("primary_color", "#4A90E2"),
+            "paid": website["paid"],
+            "editable": True
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting website for editing: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/edit/{website_id}")
+async def save_website_changes(website_id: str, changes: dict):
+    """Save changes to website (only if paid)"""
+    try:
+        website = await db.websites.find_one({"id": website_id})
+        if not website:
+            raise HTTPException(status_code=404, detail="Site web non trouvé")
+        
+        if not website.get("paid", False):
+            raise HTTPException(status_code=403, detail="Site non payé - Édition non autorisée")
+        
+        # Update allowed fields
+        update_data = {}
+        if "business_name" in changes:
+            update_data["business_name"] = changes["business_name"]
+        if "html_content" in changes:
+            update_data["html_content"] = changes["html_content"]
+        if "css_content" in changes:
+            update_data["css_content"] = changes["css_content"]
+        if "js_content" in changes:
+            update_data["js_content"] = changes.get("js_content", "")
+        if "primary_color" in changes:
+            update_data["primary_color"] = changes["primary_color"]
+        
+        update_data["updated_at"] = datetime.utcnow()
+        
+        # Save to database
+        await db.websites.update_one(
+            {"id": website_id}, 
+            {"$set": update_data}
+        )
+        
+        # Log history
+        await log_history(
+            action_type=ActionType.WEBSITE_GENERATED,
+            website_id=website_id,
+            business_name=changes.get("business_name", website.get("business_name")),
+            details={
+                "action": "website_edited",
+                "changes": list(changes.keys()),
+                "edit_mode": True
+            }
+        )
+        
+        return {
+            "message": "Site web mis à jour avec succès !",
+            "website_id": website_id,
+            "preview_url": f"/preview/{website_id}",
+            "updated_at": update_data["updated_at"]
+        }
+        
+    except Exception as e:
+        logging.error(f"Error saving website changes: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/")
 async def root():
     return {"message": "Website Generator API is running!"}
