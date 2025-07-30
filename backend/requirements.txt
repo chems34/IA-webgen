@@ -6,3 +6,5 @@ pydantic==2.5.0
 python-multipart==0.0.6
 emergentintegrations==0.1.0
 aiofiles==23.2.1
+aiohttp
+stripe
