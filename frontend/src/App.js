@@ -201,9 +201,6 @@ function WebsiteGenerator() {
                   ✨ NOUVEAU : Éditeur intégré après achat - Modifiez votre site librement !
                 </div>
               </div>
-                  ✨ "De l'idée au site web en 3 minutes - Qualité professionnelle garantie"
-                </div>
-              </div>
             </div>
             <div className="flex items-center space-x-4">
               {referralCode && (
