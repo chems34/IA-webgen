@@ -669,6 +669,62 @@ function WebsiteGenerator() {
                 </ul>
               </div>
 
+              {/* NEW - Hosting & Domain Options */}
+              <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6">
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-bold text-purple-900 mb-2">
+                    🌐 Besoin d'hébergement pour mettre votre site en ligne ?
+                  </h3>
+                  <p className="text-purple-700 text-sm">
+                    Choisissez votre solution pour rendre votre site accessible sur internet
+                  </p>
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-lg border border-purple-200">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <span className="text-2xl">🚀</span>
+                      <h4 className="font-bold text-purple-800">Service Complet</h4>
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-bold">BIENTÔT</span>
+                    </div>
+                    <p className="text-sm text-purple-700 mb-3">
+                      Nous nous occupons de tout ! Domaine + hébergement + mise en ligne automatique.
+                    </p>
+                    <div className="text-xs text-purple-600">
+                      • Domaine inclus (ex: monsalon.com)<br/>
+                      • Hébergement rapide et sécurisé<br/>
+                      • Site en ligne en 5 minutes<br/>
+                      • Support technique inclus
+                    </div>
+                    <div className="mt-3 text-center">
+                      <span className="text-purple-800 font-bold">À partir de 5€/mois</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-lg border border-blue-200">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <span className="text-2xl">🛠️</span>
+                      <h4 className="font-bold text-blue-800">Guide DIY</h4>
+                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-bold">GRATUIT</span>
+                    </div>
+                    <p className="text-sm text-blue-700 mb-3">
+                      Instructions détaillées pour héberger vous-même votre site.
+                    </p>
+                    <div className="text-xs text-blue-600">
+                      • Guide étape par étape<br/>
+                      • Recommandations d'hébergeurs<br/>
+                      • Aide à la configuration<br/>
+                      • Liste de vérification
+                    </div>
+                    <div className="mt-3">
+                      <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm">
+                        📚 Télécharger le guide
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <button
                 onClick={createReferralLink}
                 className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors"
