@@ -105,6 +105,23 @@ class PayPalOrderResponse(BaseModel):
     amount: float
     website_id: str
 
+class ConciergeRequest(BaseModel):
+    website_id: str
+    contact_email: str
+    preferred_domain: str
+    phone: Optional[str] = None
+    urgency: Optional[str] = "normal"  # "normal" or "urgent"
+
+class ConciergeResponse(BaseModel):
+    request_id: str
+    status: str
+    message: str
+    payment_link: Optional[str] = None
+    estimated_completion: str
+    price: float
+    domain_available: bool
+    alternatives: Optional[List[str]] = None
+
 # Website Templates
 WEBSITE_TEMPLATES = {
     "simple": {
