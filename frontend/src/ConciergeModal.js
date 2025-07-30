@@ -14,6 +14,9 @@ function ConciergeModal({ isOpen, onClose, websiteId, websiteName }) {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [paymentLink, setPaymentLink] = useState(null);
+  const [requestId, setRequestId] = useState(null);
+  const [estimatedTime, setEstimatedTime] = useState("2-4h après paiement");
 
   if (!isOpen) return null;
 
