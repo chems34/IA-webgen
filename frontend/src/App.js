@@ -717,7 +717,10 @@ function WebsiteGenerator() {
                       • Liste de vérification
                     </div>
                     <div className="mt-3">
-                      <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm">
+                      <button 
+                        onClick={() => window.open(`${API}/download-hosting-guide`, '_blank')}
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm"
+                      >
                         📚 Télécharger le guide
                       </button>
                     </div>
