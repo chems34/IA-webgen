@@ -15,6 +15,10 @@ import io
 import base64
 from fastapi.responses import StreamingResponse, FileResponse
 from enum import Enum
+import aiohttp
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Load environment variables
 ROOT_DIR = Path(__file__).parent
