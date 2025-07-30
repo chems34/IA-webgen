@@ -468,6 +468,54 @@ function WebsiteGenerator() {
             </p>
 
             <div className="space-y-6">
+              {/* NEW - Editing Feature Info */}
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="text-3xl">🎨</div>
+                  <h3 className="font-semibold text-blue-900">
+                    ✨ Édition Illimitée Incluse Après Achat !
+                  </h3>
+                </div>
+                <p className="text-blue-800 mb-3">
+                  Une fois votre site acheté, vous pourrez le <strong>modifier librement</strong> grâce à notre éditeur intégré :
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-green-600">✅</span>
+                      <span className="text-sm">Changer les couleurs et le nom</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-green-600">✅</span>
+                      <span className="text-sm">Ajouter sections et témoignages</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-green-600">✅</span>
+                      <span className="text-sm">Éditer le contenu facilement</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-green-600">✅</span>
+                      <span className="text-sm">Ajouter galerie et contact</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-green-600">✅</span>
+                      <span className="text-sm">Prévisualisation temps réel</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-green-600">✅</span>
+                      <span className="text-sm">Guide d'aide intégré</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-center">
+                  <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                    🎯 Personnalisez votre site autant que vous voulez !
+                  </span>
+                </div>
+              </div>
+
               <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-6">
                 <h3 className="font-semibold text-indigo-900 mb-4">Récapitulatif</h3>
                 <div className="space-y-2">
