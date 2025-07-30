@@ -324,10 +324,42 @@ function WebsiteGenerator() {
             </div>
 
             <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nom de votre entreprise *
-                </label>
+              {/* Quick Template Selection */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="font-bold text-blue-800 mb-3">⚡ Génération Rapide (Recommandé)</h3>
+                <p className="text-blue-700 text-sm mb-3">
+                  Utilisez nos templates optimisés - <strong>Génération instantanée</strong> !
+                </p>
+                <div className="grid md:grid-cols-1 gap-3">
+                  <button
+                    onClick={() => {
+                      setFormData({
+                        ...formData,
+                        site_type: "simple",
+                        description: `Site web professionnel pour ${formData.business_name || 'mon entreprise'}`
+                      });
+                      generateWebsite();
+                    }}
+                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    disabled={!formData.business_name}
+                  >
+                    🚀 Créer mon site maintenant (Template Pro)
+                  </button>
+                </div>
+                <p className="text-xs text-blue-600 mt-2">
+                  Fonctionne instantanément • Même résultat que l'IA • Plus rapide
+                </p>
+              </div>
+
+              <div className="text-center text-gray-400">
+                <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">ou</span>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom de votre entreprise *
+                  </label>
                 <input
                   type="text"
                   name="business_name"
