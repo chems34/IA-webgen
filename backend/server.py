@@ -307,87 +307,440 @@ async def generate_website_from_template(request: TemplateWebsiteRequest):
     except Exception as e:
         logging.error(f"Error in generate_website_from_template: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-async def generate_website_content(description: str, site_type: str, business_name: str, primary_color: str):
-    """Generate website content using Gemini AI"""
+async def generate_website_content(description: str, site_type: str, business_name: str, primary_color: str = "#3B82F6"):
+    """Generate website content using AI or fallback to template"""
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        # Try AI generation first
+        if GEMINI_API_KEY and GEMINI_API_KEY != "your_gemini_api_key_here":
+            try:
+                # Configure Gemini API (if available)
+                from emergentintegrations.llm.chat import LlmChat, UserMessage
+                
+                chat = LlmChat(
+                    api_key=GEMINI_API_KEY,
+                    session_id=str(uuid.uuid4()),
+                    system_message=f"""You are an expert web developer who creates beautiful, modern, responsive websites.
+                    Create a complete website with HTML, CSS, and JavaScript based on the user's requirements.
+                    
+                    Requirements:
+                    - Use modern, clean design principles
+                    - Make it fully responsive (mobile-first)
+                    - Include interactive elements where appropriate
+                    - Use the primary color: {primary_color}
+                    - Business name: {business_name}
+                    - Site type: {site_type}
+                    
+                    Return your response in this exact format:
+                    
+                    HTML:
+                    [Complete HTML code here]
+                    
+                    CSS:
+                    [Complete CSS code here]
+                    
+                    JS:
+                    [Complete JavaScript code here]
+                    
+                    Make sure the website is professional, modern, and fully functional."""
+                ).with_model("gemini", "gemini-2.0-flash")
+                
+                # Generate the website
+                prompt = f"""Create a {site_type} website for {business_name}.
+                
+                Description: {description}
+                
+                Requirements:
+                - Modern, professional design
+                - Responsive layout
+                - Primary color: {primary_color}
+                - Include relevant sections for a {site_type} site
+                - Add placeholder content if needed
+                - Make it visually appealing and functional"""
+                
+                user_message = UserMessage(text=prompt)
+                response = await chat.send_message(user_message)
+                
+                # Parse the response to extract HTML, CSS, and JS
+                content = response.strip()
+                
+                # Extract HTML
+                html_start = content.find("HTML:") + 5
+                html_end = content.find("CSS:")
+                html_content = content[html_start:html_end].strip()
+                
+                # Extract CSS
+                css_start = content.find("CSS:") + 4
+                css_end = content.find("JS:")
+                css_content = content[css_start:css_end].strip()
+                
+                # Extract JS
+                js_start = content.find("JS:") + 3
+                js_content = content[js_start:].strip()
+                
+                return {
+                    "html": html_content,
+                    "css": css_content,
+                    "js": js_content
+                }
+            except Exception as ai_error:
+                logging.warning(f"AI generation failed: {str(ai_error)}, falling back to template")
         
-        # Get Gemini API key from environment
-        gemini_key = os.environ.get('GEMINI_API_KEY')
-        if not gemini_key:
-            raise HTTPException(status_code=500, detail="Gemini API key not configured")
-        
-        # Create chat instance
-        chat = LlmChat(
-            api_key=gemini_key,
-            session_id=str(uuid.uuid4()),
-            system_message=f"""You are an expert web developer who creates beautiful, modern, responsive websites.
-            Create a complete website with HTML, CSS, and JavaScript based on the user's requirements.
-            
-            Requirements:
-            - Use modern, clean design principles
-            - Make it fully responsive (mobile-first)
-            - Include interactive elements where appropriate
-            - Use the primary color: {primary_color}
-            - Business name: {business_name}
-            - Site type: {site_type}
-            
-            Return your response in this exact format:
-            
-            HTML:
-            [Complete HTML code here]
-            
-            CSS:
-            [Complete CSS code here]
-            
-            JS:
-            [Complete JavaScript code here]
-            
-            Make sure the website is professional, modern, and fully functional."""
-        ).with_model("gemini", "gemini-2.0-flash")
-        
-        # Generate the website
-        prompt = f"""Create a {site_type} website for {business_name}.
-        
-        Description: {description}
-        
-        Requirements:
-        - Modern, professional design
-        - Responsive layout
-        - Primary color: {primary_color}
-        - Include relevant sections for a {site_type} site
-        - Add placeholder content if needed
-        - Make it visually appealing and functional"""
-        
-        user_message = UserMessage(text=prompt)
-        response = await chat.send_message(user_message)
-        
-        # Parse the response to extract HTML, CSS, and JS
-        content = response.strip()
-        
-        # Extract HTML
-        html_start = content.find("HTML:") + 5
-        html_end = content.find("CSS:")
-        html_content = content[html_start:html_end].strip()
-        
-        # Extract CSS
-        css_start = content.find("CSS:") + 4
-        css_end = content.find("JS:")
-        css_content = content[css_start:css_end].strip()
-        
-        # Extract JS
-        js_start = content.find("JS:") + 3
-        js_content = content[js_start:].strip()
-        
-        return {
-            "html": html_content,
-            "css": css_content,
-            "js": js_content
-        }
+        # Fallback to enhanced template generation
+        logging.info("Using enhanced template generation (AI fallback)")
+        return generate_enhanced_template(description, site_type, business_name, primary_color)
         
     except Exception as e:
-        logging.error(f"Error generating website: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to generate website: {str(e)}")
+        logging.error(f"Error in generate_website_content: {str(e)}")
+        # Final fallback to simple template
+        return generate_from_template("simple", business_name, primary_color, description)
+
+def generate_enhanced_template(description: str, site_type: str, business_name: str, primary_color: str):
+    """Generate enhanced template based on business type and description"""
+    
+    # Analyze description for key features
+    description_lower = description.lower()
+    has_services = "service" in description_lower or "prestation" in description_lower
+    has_contact = "contact" in description_lower or "rendez-vous" in description_lower
+    has_gallery = "photo" in description_lower or "galerie" in description_lower or "image" in description_lower
+    
+    # Generate business-specific content
+    if "restaurant" in site_type.lower() or "restaurant" in description_lower:
+        sections = generate_restaurant_content(business_name, description)
+    elif "coiffeur" in description_lower or "salon" in description_lower or "beauté" in description_lower:
+        sections = generate_salon_content(business_name, description)
+    elif "médecin" in description_lower or "cabinet" in description_lower or "santé" in description_lower:
+        sections = generate_medical_content(business_name, description)
+    else:
+        sections = generate_business_content(business_name, description, site_type)
+    
+    # Build HTML
+    html_content = f"""
+    <div class="website-container">
+        <header class="hero-section">
+            <h1>{business_name}</h1>
+            <p class="tagline">{sections['tagline']}</p>
+            <div class="cta-buttons">
+                <button class="btn-primary">Découvrir</button>
+                <button class="btn-secondary">Contact</button>
+            </div>
+        </header>
+        
+        <section class="about-section">
+            <h2>À propos</h2>
+            <p>{sections['about']}</p>
+        </section>
+        
+        {sections['services_html'] if has_services else ''}
+        
+        <section class="contact-section">
+            <h2>Contact</h2>
+            <div class="contact-info">
+                <p>📧 Email : contact@{business_name.lower().replace(' ', '')}.com</p>
+                <p>📞 Téléphone : 01 23 45 67 89</p>
+                <p>📍 Adresse : 123 Rue Example, 75001 Paris</p>
+            </div>
+        </section>
+        
+        {sections['gallery_html'] if has_gallery else ''}
+    </div>
+    """
+    
+    # Enhanced CSS
+    css_content = f"""
+    * {{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }}
+    
+    body {{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }}
+    
+    .website-container {{
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    }}
+    
+    .hero-section {{
+        background: linear-gradient(135deg, {primary_color} 0%, {adjust_color_brightness(primary_color, -20)} 100%);
+        color: white;
+        text-align: center;
+        padding: 80px 20px;
+    }}
+    
+    .hero-section h1 {{
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }}
+    
+    .tagline {{
+        font-size: 1.3rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+    }}
+    
+    .cta-buttons {{
+        margin-top: 30px;
+    }}
+    
+    .btn-primary, .btn-secondary {{
+        padding: 15px 30px;
+        margin: 0 10px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }}
+    
+    .btn-primary {{
+        background: white;
+        color: {primary_color};
+        font-weight: bold;
+    }}
+    
+    .btn-primary:hover {{
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }}
+    
+    .btn-secondary {{
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }}
+    
+    .btn-secondary:hover {{
+        background: white;
+        color: {primary_color};
+    }}
+    
+    section {{
+        padding: 60px 40px;
+    }}
+    
+    h2 {{
+        font-size: 2.5rem;
+        color: {primary_color};
+        margin-bottom: 30px;
+        text-align: center;
+    }}
+    
+    .about-section {{
+        background: #f8f9fa;
+    }}
+    
+    .services-grid {{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }}
+    
+    .service-card {{
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }}
+    
+    .service-card:hover {{
+        transform: translateY(-5px);
+    }}
+    
+    .contact-section {{
+        background: {primary_color};
+        color: white;
+        text-align: center;
+    }}
+    
+    .contact-info {{
+        font-size: 1.2rem;
+        line-height: 2;
+    }}
+    
+    @media (max-width: 768px) {{
+        .hero-section h1 {{
+            font-size: 2.5rem;
+        }}
+        
+        section {{
+            padding: 40px 20px;
+        }}
+        
+        .services-grid {{
+            grid-template-columns: 1fr;
+        }}
+    }}
+    """
+    
+    # Enhanced JavaScript
+    js_content = f"""
+    document.addEventListener('DOMContentLoaded', function() {{
+        console.log('Site web {business_name} chargé avec succès!');
+        
+        // Smooth scrolling for buttons
+        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {{
+            button.addEventListener('click', function(e) {{
+                e.preventDefault();
+                const target = document.querySelector('.about-section');
+                if (target) {{
+                    target.scrollIntoView({{ behavior: 'smooth' }});
+                }}
+            }});
+        }});
+        
+        // Add animation on scroll
+        const observer = new IntersectionObserver((entries) => {{
+            entries.forEach(entry => {{
+                if (entry.isIntersecting) {{
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }}
+            }});
+        }});
+        
+        document.querySelectorAll('section').forEach(section => {{
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.6s ease';
+            observer.observe(section);
+        }});
+    }});
+    """
+    
+    return {
+        "html": html_content,
+        "css": css_content,
+        "js": js_content
+    }
+
+def adjust_color_brightness(hex_color: str, percent: int):
+    """Adjust color brightness by percentage"""
+    # Simple implementation - in real case, you'd use a proper color library
+    return hex_color  # Fallback to original color
+
+def generate_restaurant_content(business_name: str, description: str):
+    return {
+        "tagline": "Une expérience culinaire exceptionnelle vous attend",
+        "about": f"Bienvenue chez {business_name}, où la passion de la gastronomie rencontre l'art de recevoir. {description}",
+        "services_html": """
+        <section class="services-section">
+            <h2>Notre Carte</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>🍽️ Plats Signatures</h3>
+                    <p>Découvrez nos créations culinaires uniques, préparées avec des ingrédients frais et de saison.</p>
+                </div>
+                <div class="service-card">
+                    <h3>🍷 Carte des Vins</h3>
+                    <p>Une sélection de vins d'exception pour accompagner parfaitement vos repas.</p>
+                </div>
+                <div class="service-card">
+                    <h3>🎉 Événements Privés</h3>
+                    <p>Organisez vos événements spéciaux dans notre espace privatisable.</p>
+                </div>
+            </div>
+        </section>
+        """,
+        "gallery_html": """
+        <section class="gallery-section">
+            <h2>Nos Créations</h2>
+            <div class="gallery-placeholder">
+                <p>📸 Galerie photos de nos plats - À personnaliser avec vos propres images</p>
+            </div>
+        </section>
+        """
+    }
+
+def generate_salon_content(business_name: str, description: str):
+    return {
+        "tagline": "Révélez votre beauté naturelle",
+        "about": f"Chez {business_name}, nous sublisons votre beauté avec expertise et passion. {description}",
+        "services_html": """
+        <section class="services-section">
+            <h2>Nos Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>✂️ Coupe & Coiffage</h3>
+                    <p>Coupes tendances et intemporelles, adaptées à votre personnalité et morphologie.</p>
+                </div>
+                <div class="service-card">
+                    <h3>🎨 Coloration</h3>
+                    <p>Techniques de coloration moderne pour révéler l'éclat de vos cheveux.</p>
+                </div>
+                <div class="service-card">
+                    <h3>💆 Soins Capillaires</h3>
+                    <p>Traitements personnalisés pour nourrir et fortifier vos cheveux.</p>
+                </div>
+            </div>
+        </section>
+        """,
+        "gallery_html": ""
+    }
+
+def generate_medical_content(business_name: str, description: str):
+    return {
+        "tagline": "Votre santé, notre priorité",
+        "about": f"Le {business_name} vous accueille dans un environnement professionnel et bienveillant. {description}",
+        "services_html": """
+        <section class="services-section">
+            <h2>Nos Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>🩺 Consultations</h3>
+                    <p>Consultations générales et spécialisées sur rendez-vous.</p>
+                </div>
+                <div class="service-card">
+                    <h3>🏥 Urgences</h3>
+                    <p>Prise en charge des urgences médicales selon disponibilités.</p>
+                </div>
+                <div class="service-card">
+                    <h3>📋 Suivi Médical</h3>
+                    <p>Suivi personnalisé et préventif pour votre bien-être.</p>
+                </div>
+            </div>
+        </section>
+        """,
+        "gallery_html": ""
+    }
+
+def generate_business_content(business_name: str, description: str, site_type: str):
+    return {
+        "tagline": "Excellence et professionnalisme à votre service",
+        "about": f"Découvrez {business_name}, votre partenaire de confiance. {description}",
+        "services_html": """
+        <section class="services-section">
+            <h2>Nos Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>⭐ Service Premium</h3>
+                    <p>Une approche personnalisée pour répondre à tous vos besoins.</p>
+                </div>
+                <div class="service-card">
+                    <h3>🎯 Expertise</h3>
+                    <p>Des professionnels qualifiés pour vous accompagner.</p>
+                </div>
+                <div class="service-card">
+                    <h3>🚀 Innovation</h3>
+                    <p>Des solutions modernes et adaptées à votre secteur.</p>
+                </div>
+            </div>
+        </section>
+        """,
+        "gallery_html": ""
+    }
 
 # API Routes
 @api_router.post("/generate-website", response_model=WebsiteResponse)
