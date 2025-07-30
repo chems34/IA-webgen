@@ -727,21 +727,7 @@ function WebsiteGenerator() {
                       <div className="text-gray-800 font-bold mb-1">49€ <span className="text-sm text-gray-500">tout compris</span></div>
                       <div className="text-xs text-green-600 mb-2">💡 Support inclus 3 mois</div>
                       <button 
-                        onClick={() => {
-                          const email = prompt("Votre email pour vous contacter :");
-                          const domain = prompt("Quel nom de domaine souhaitez-vous ? (ex: mon-salon.com)");
-                          if (email && domain) {
-                            axios.post(`${API}/request-concierge-service`, {
-                              website_id: generatedWebsite.id,
-                              contact_email: email,
-                              preferred_domain: domain
-                            }).then(response => {
-                              alert(`✅ Parfait ! Nous vous contactons dans 24h.\n\n📧 Surveillez votre email : ${email}\n🌐 Domaine réservé : ${domain}`);
-                            }).catch(error => {
-                              alert("❌ Erreur. Réessayez ou contactez-nous.");
-                            });
-                          }
-                        }}
+                        onClick={() => setShowConciergeModal(true)}
                         className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 text-sm font-medium"
                       >
                         🚀 Oui, faites-le pour moi
