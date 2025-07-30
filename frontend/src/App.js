@@ -25,6 +25,7 @@ function WebsiteGenerator() {
   const [paymentId, setPaymentId] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
+  const [showConciergeModal, setShowConciergeModal] = useState(false);
 
   // Check for referral code in URL
   useEffect(() => {
