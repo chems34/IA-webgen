@@ -884,7 +884,7 @@ async def create_referral_link():
         
         return {
             "referral_code": referral_code,
-            "referral_link": f"https://707b7a03-8bf6-42b4-a6bc-cbbf63f8a0b5.preview.emergentagent.com/?ref={referral_code}",
+            "referral_link": f"https://bda0d49d-4e16-4c2f-b3a8-78fbd2ddda32.preview.emergentagent.com/?ref={referral_code}",
             "expires_at": expires_at,
             "message": "Lien de parrainage créé avec succès !"
         }
