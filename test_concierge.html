@@ -245,7 +245,7 @@
                 // Si lien de paiement disponible, l'afficher
                 if (conciergeData.payment_link) {
                     setTimeout(() => {
-                        if (confirm('Ouvrir le lien de paiement Stripe ?')) {
+                        if (confirm('Ouvrir le lien de paiement PayPal ?')) {
                             window.open(conciergeData.payment_link, '_blank');
                         }
                     }, 2000);
