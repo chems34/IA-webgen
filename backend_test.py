@@ -562,6 +562,13 @@ class AIWebGenTester:
         self.test_editing_endpoints()
         self.test_specific_test_case()
         
+        # NEW: Hosting features tests
+        print("\n🏠 Testing NEW Hosting Features...")
+        self.test_concierge_service()
+        self.test_hosting_guide_download()
+        self.test_download_website()
+        self.test_new_hosting_features_integration()
+        
         # History system tests
         print("\n📜 Testing History System...")
         self.test_history_endpoints()
@@ -582,7 +589,7 @@ class AIWebGenTester:
         print(f"📊 Test Results: {self.tests_passed}/{self.tests_run} tests passed")
         
         if self.tests_passed == self.tests_run:
-            print("🎉 All tests passed! Website editing system is working correctly.")
+            print("🎉 All tests passed! All features including NEW hosting system are working correctly.")
             return 0
         else:
             print(f"⚠️  {self.tests_run - self.tests_passed} tests failed. Check the issues above.")
