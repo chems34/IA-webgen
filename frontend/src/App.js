@@ -279,6 +279,10 @@ function WebsiteGenerator() {
                 </div>
               </div>
 
+              <p className="text-gray-300 mb-8">
+                Décrivez votre projet et notre IA créera un site web professionnel pour vous
+              </p>
+
             {/* NEW - Editing Info Banner on Homepage */}
             <div className="bg-gradient-to-r from-green-900 to-blue-900 border border-green-400 rounded-lg p-6 mb-8">
               <div className="flex items-center justify-center space-x-3 mb-4">
