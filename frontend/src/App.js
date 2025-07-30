@@ -654,6 +654,7 @@ function App() {
         <Route path="/" element={<WebsiteGenerator />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/history" element={<History />} />
+        <Route path="/edit/:websiteId" element={<WebsiteEditor />} />
       </Routes>
     </BrowserRouter>
   );
