@@ -1848,61 +1848,225 @@ async def mark_website_as_paid(website_id: str):
         logging.error(f"Error marking website as paid: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.post("/request-concierge-service")
-async def request_concierge_service(website_id: str, contact_email: str, preferred_domain: str):
-    """Request concierge hosting service"""
+@api_router.post("/request-concierge-service", response_model=ConciergeResponse)
+async def request_concierge_service_automated(request: ConciergeRequest):
+    """Demande de service concierge automatisé"""
     try:
         # Get website details
-        website = await db.websites.find_one({"id": website_id})
+        website = await db.websites.find_one({"id": request.website_id})
         if not website:
             raise HTTPException(status_code=404, detail="Site web non trouvé")
         
-        # Create concierge request
-        request_id = str(uuid.uuid4())
-        concierge_request = {
-            "id": request_id,
-            "website_id": website_id,
+        # Préparer les données pour l'automatisation
+        request_data = {
+            "website_id": request.website_id,
             "business_name": website.get("business_name"),
-            "contact_email": contact_email,
-            "preferred_domain": preferred_domain,
-            "status": "pending",
-            "price": 49.0,
+            "contact_email": request.contact_email,
+            "preferred_domain": request.preferred_domain,
+            "phone": request.phone,
+            "urgency": request.urgency
+        }
+        
+        # Traitement automatique
+        result = await concierge_automation.process_concierge_request(request_data)
+        
+        # Créer l'enregistrement dans la base de données
+        concierge_request_id = str(uuid.uuid4())
+        price = 59.0 if request.urgency == "urgent" else 49.0
+        
+        concierge_request_data = {
+            "id": concierge_request_id,
+            "website_id": request.website_id,
+            "business_name": website.get("business_name"),
+            "contact_email": request.contact_email,
+            "preferred_domain": request.preferred_domain,
+            "phone": request.phone,
+            "urgency": request.urgency,
+            "status": result.get("status", "pending"),
+            "price": price,
+            "domain_available": result.get("domain_available", False),
+            "payment_link": result.get("payment_link"),
+            "alternatives": result.get("alternatives", []),
             "created_at": datetime.utcnow(),
+            "automated": True,
+            "estimated_completion": result.get("estimated_completion"),
             "includes": [
-                "Achat de domaine",
-                "Configuration hébergement", 
-                "Mise en ligne du site",
-                "Support 3 mois"
+                "Vérification et achat de domaine automatique",
+                "Configuration hébergement sécurisé automatique", 
+                "Déploiement et mise en ligne automatique",
+                "Configuration SSL et DNS automatique",
+                "Support technique 3 mois inclus",
+                "Monitoring et sauvegardes automatiques"
             ]
         }
         
-        await db.concierge_requests.insert_one(concierge_request)
+        await db.concierge_requests.insert_one(concierge_request_data)
         
         # Log history
         await log_history(
-            action_type=ActionType.REFERRAL_CREATED,  # We can reuse this or create new enum
-            website_id=website_id,
+            action_type=ActionType.REFERRAL_CREATED,  
+            website_id=request.website_id,
             business_name=website.get("business_name"),
             details={
-                "service": "concierge_hosting",
-                "contact_email": contact_email,
-                "preferred_domain": preferred_domain,
-                "price": 49.0,
-                "request_id": request_id
+                "service": "concierge_automated",
+                "contact_email": request.contact_email,
+                "preferred_domain": request.preferred_domain,
+                "urgency": request.urgency,
+                "price": price,
+                "request_id": concierge_request_id,
+                "domain_available": result.get("domain_available"),
+                "automated": True
             }
         )
         
+        return ConciergeResponse(
+            request_id=concierge_request_id,
+            status=result.get("status", "success"),
+            message=result.get("message", "Demande traitée automatiquement"),
+            payment_link=result.get("payment_link"),
+            estimated_completion=result.get("estimated_completion", "2-4h après paiement"),
+            price=price,
+            domain_available=result.get("domain_available", True),
+            alternatives=result.get("alternatives")
+        )
+        
+    except Exception as e:
+        logging.error(f"Erreur service concierge automatisé: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/concierge/webhook/payment")
+async def concierge_payment_webhook(webhook_data: dict):
+    """Webhook pour traitement automatique après paiement"""
+    try:
+        logging.info("🔔 Webhook paiement conciergerie reçu")
+        
+        # Traiter le webhook automatiquement
+        result = await concierge_automation.process_payment_webhook(webhook_data)
+        
         return {
-            "message": "Demande de service concierge enregistrée !",
-            "request_id": request_id,
-            "status": "pending",
-            "next_steps": "Nous vous contacterons dans les 24h pour finaliser votre domaine et mettre votre site en ligne.",
-            "price": 49.0,
-            "includes": concierge_request["includes"]
+            "status": "processed",
+            "message": "Webhook traité automatiquement",
+            "automation_result": result
         }
         
     except Exception as e:
-        logging.error(f"Error requesting concierge service: {str(e)}")
+        logging.error(f"Erreur webhook paiement: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/concierge/status/{request_id}")
+async def get_concierge_status(request_id: str):
+    """Obtenir le statut d'une demande de conciergerie"""
+    try:
+        request_data = await db.concierge_requests.find_one({"id": request_id})
+        if not request_data:
+            raise HTTPException(status_code=404, detail="Demande non trouvée")
+        
+        # Nettoyer les données pour la réponse
+        clean_data = {}
+        for key, value in request_data.items():
+            if key == "_id":
+                continue
+            elif key == "created_at" and hasattr(value, 'isoformat'):
+                clean_data[key] = value.isoformat()
+            elif key == "completed_at" and hasattr(value, 'isoformat'):
+                clean_data[key] = value.isoformat()
+            else:
+                clean_data[key] = value
+        
+        return clean_data
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération statut: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/concierge/simulate-completion/{request_id}")
+async def simulate_concierge_completion(request_id: str):
+    """Simuler la completion d'une demande (pour démo)"""
+    try:
+        request_data = await db.concierge_requests.find_one({"id": request_id})
+        if not request_data:
+            raise HTTPException(status_code=404, detail="Demande non trouvée")
+        
+        # Simuler la completion automatique
+        domain = request_data.get("preferred_domain")
+        business_name = request_data.get("business_name")
+        contact_email = request_data.get("contact_email")
+        website_id = request_data.get("website_id")
+        
+        # Marquer comme complété
+        await db.concierge_requests.update_one(
+            {"id": request_id},
+            {"$set": {
+                "status": "completed",
+                "completed_at": datetime.utcnow(),
+                "live_url": f"https://{domain}",
+                "completion_time": "2h 15min"
+            }}
+        )
+        
+        # Envoyer email de livraison
+        await concierge_automation.send_delivery_email(
+            contact_email, domain, business_name, website_id
+        )
+        
+        return {
+            "message": "Conciergerie simulée comme terminée",
+            "status": "completed",
+            "live_url": f"https://{domain}",
+            "completion_time": "2h 15min"
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur simulation completion: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/concierge/admin/requests")
+async def get_all_concierge_requests(skip: int = 0, limit: int = 50):
+    """Obtenir toutes les demandes de conciergerie (admin)"""
+    try:
+        cursor = db.concierge_requests.find().sort("created_at", -1).skip(skip).limit(limit)
+        requests = []
+        async for request in cursor:
+            clean_request = {}
+            for key, value in request.items():
+                if key == "_id":
+                    continue
+                elif key in ["created_at", "completed_at", "payment_received_at"] and hasattr(value, 'isoformat'):
+                    clean_request[key] = value.isoformat()
+                else:
+                    clean_request[key] = value
+            requests.append(clean_request)
+        
+        total_count = await db.concierge_requests.count_documents({})
+        
+        return {
+            "requests": requests,
+            "total": total_count,
+            "skip": skip,
+            "limit": limit
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération demandes admin: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/request-concierge-service")
+async def request_concierge_service(website_id: str, contact_email: str, preferred_domain: str):
+    """Request concierge hosting service (legacy endpoint for compatibility)"""
+    try:
+        # Créer une requête ConciergeRequest pour la nouvelle API
+        request = ConciergeRequest(
+            website_id=website_id,
+            contact_email=contact_email,
+            preferred_domain=preferred_domain,
+            urgency="normal"
+        )
+        
+        # Appeler la nouvelle API automatisée
+        return await request_concierge_service_automated(request)
+        
+    except Exception as e:
+        logging.error(f"Erreur service concierge legacy: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/download-hosting-guide")
