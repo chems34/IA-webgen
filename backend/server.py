@@ -32,6 +32,14 @@ PAYPAL_CLIENT_SECRET = os.environ.get('PAYPAL_CLIENT_SECRET')
 # Gemini AI Configuration
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 
+# Concierge Automation Configuration
+NAMECHEAP_API_USER = os.environ.get('NAMECHEAP_API_USER')
+NAMECHEAP_API_KEY = os.environ.get('NAMECHEAP_API_KEY')
+NETLIFY_TOKEN = os.environ.get('NETLIFY_TOKEN')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+SMTP_EMAIL = os.environ.get('SMTP_EMAIL', 'noreply@aiwebgen.com')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
+
 # Create the main app without a prefix
 app = FastAPI()
 
