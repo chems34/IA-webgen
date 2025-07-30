@@ -1023,6 +1023,24 @@ async def mark_website_as_paid(website_id: str):
         logging.error(f"Error marking website as paid: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/download-hosting-guide")
+async def download_hosting_guide():
+    """Download hosting guide for customers"""
+    try:
+        guide_path = "/app/guide-hebergement.md"
+        
+        if not os.path.exists(guide_path):
+            raise HTTPException(status_code=404, detail="Guide non trouvé")
+        
+        return FileResponse(
+            path=guide_path,
+            media_type='text/markdown',
+            filename="Guide-Hebergement-AI-WebGen.md"
+        )
+    except Exception as e:
+        logging.error(f"Error downloading hosting guide: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/")
 async def root():
     return {"message": "Website Generator API is running!"}
