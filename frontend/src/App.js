@@ -641,6 +641,14 @@ function WebsiteGenerator() {
               <p className="text-gray-600">
                 Votre paiement a été confirmé et votre site web est prêt à être téléchargé
               </p>
+              
+              {/* Subtle concern creation */}
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-3 mt-4">
+                <p className="text-blue-700 text-sm">
+                  🤔 <strong>Et maintenant ?</strong> La plupart de nos clients se demandent comment mettre leur site en ligne... 
+                  <span className="text-blue-600 text-xs">(On a pensé à ça aussi !)</span>
+                </p>
+              </div>
             </div>
 
             <div className="space-y-4">
