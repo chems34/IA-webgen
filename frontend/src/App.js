@@ -698,7 +698,24 @@ function WebsiteGenerator() {
                     </div>
                     <div className="text-center">
                       <div className="text-purple-800 font-bold mb-2">49€ tout compris</div>
-                      <button className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 text-sm">
+                      <button 
+                        onClick={() => {
+                          const email = prompt("Votre email de contact :");
+                          const domain = prompt("Domaine souhaité (ex: mon-salon.com) :");
+                          if (email && domain) {
+                            axios.post(`${API}/request-concierge-service`, {
+                              website_id: generatedWebsite.id,
+                              contact_email: email,
+                              preferred_domain: domain
+                            }).then(response => {
+                              alert(`✅ ${response.data.message}\n\n${response.data.next_steps}`);
+                            }).catch(error => {
+                              alert("❌ Erreur lors de la demande. Réessayez.");
+                            });
+                          }
+                        }}
+                        className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 text-sm"
+                      >
                         🚀 Je veux ce service
                       </button>
                     </div>
