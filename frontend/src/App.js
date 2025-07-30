@@ -198,6 +198,9 @@ function WebsiteGenerator() {
               <div className="ml-4 text-sm text-gray-300">
                 <div className="font-medium">Créateur de sites web par Intelligence Artificielle</div>
                 <div className="text-xs text-green-400 italic mt-1">
+                  ✨ NOUVEAU : Éditeur intégré après achat - Modifiez votre site librement !
+                </div>
+              </div>
                   ✨ "De l'idée au site web en 3 minutes - Qualité professionnelle garantie"
                 </div>
               </div>
