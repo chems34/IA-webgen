@@ -41,7 +41,6 @@ GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 NAMECHEAP_API_USER = os.environ.get('NAMECHEAP_API_USER')
 NAMECHEAP_API_KEY = os.environ.get('NAMECHEAP_API_KEY')
 NETLIFY_TOKEN = os.environ.get('NETLIFY_TOKEN')
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 SMTP_EMAIL = os.environ.get('SMTP_EMAIL', 'noreply@aiwebgen.com')
 SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
 
