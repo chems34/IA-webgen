@@ -125,19 +125,65 @@ function ConciergeModal({ isOpen, onClose, websiteId, websiteName }) {
 
             {/* Timeline */}
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-              <h4 className="font-bold text-yellow-800 mb-3">⏰ Planning prévu :</h4>
+              <h4 className="font-bold text-yellow-800 mb-3">⏰ Automatisation Complète (2-4h) :</h4>
               <div className="space-y-2">
                 <div className="flex items-center space-x-3">
-                  <span className="bg-yellow-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">1</span>
-                  <span className="text-sm">Aujourd'hui : Nous recevons votre demande</span>
+                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">🤖</span>
+                  <span className="text-sm"><strong>Immédiat :</strong> Vérification automatique du domaine</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <span className="bg-yellow-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">2</span>
-                  <span className="text-sm">Demain : Nous achetons votre domaine et configurons tout</span>
+                  <span className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">💳</span>
+                  <span className="text-sm"><strong>Après paiement :</strong> Démarrage automatique (0-30 min)</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <span className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">3</span>
-                  <span className="text-sm">48h max : Votre site est en ligne et accessible !</span>
+                  <span className="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">⚡</span>
+                  <span className="text-sm"><strong>1-2h :</strong> Achat domaine + hébergement automatique</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">🌐</span>
+                  <span className="text-sm"><strong>2-4h max :</strong> Site en ligne + email de confirmation</span>
+                </div>
+              </div>
+              <div className="mt-3 p-2 bg-green-100 rounded text-center">
+                <span className="text-green-800 font-bold text-sm">🚀 Aucune intervention humaine requise !</span>
+              </div>
+            </div>
+
+            {/* Automation Benefits */}
+            <div className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="text-3xl">🤖</div>
+                <div>
+                  <h4 className="font-bold text-blue-800">Automatisation IA Complète</h4>
+                  <p className="text-blue-600 text-sm">
+                    Notre système IA se charge de tout en 2-4h maximum
+                  </p>
+                </div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✅</span>
+                  <span>Vérification domaine instantanée</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✅</span>
+                  <span>Achat domaine automatique</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✅</span>
+                  <span>Hébergement configuré automatiquement</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✅</span>
+                  <span>DNS et SSL automatiques</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✅</span>
+                  <span>Site déployé automatiquement</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✅</span>
+                  <span>Emails automatiques à chaque étape</span>
                 </div>
               </div>
             </div>
