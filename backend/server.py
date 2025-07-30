@@ -876,63 +876,13 @@ class ConciergeAutomation:
         return alternatives[:3]
     
     async def create_automatic_payment_link(self, request_data: dict, price: float) -> str:
-        """Crée lien de paiement automatique avec Stripe intégré"""
+        """Crée lien de paiement automatique avec PayPal"""
         try:
-            # Utiliser Stripe API du système
-            stripe_api_key = os.environ.get('STRIPE_API_KEY', os.environ.get('STRIPE_SECRET_KEY'))
-            
-            if stripe_api_key and stripe_api_key != "your_stripe_secret_key":
-                # Utiliser le système Stripe emergentintegrations
-                host_url = "https://bda0d49d-4e16-4c2f-b3a8-78fbd2ddda32.preview.emergentagent.com"
-                webhook_url = f"{host_url}/api/concierge/webhook/stripe"
-                
-                stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
-                
-                # Créer la session de paiement
-                success_url = f"{host_url}/?concierge_success=true&session_id={{CHECKOUT_SESSION_ID}}"
-                cancel_url = f"{host_url}/?concierge_cancelled=true"
-                
-                metadata = {
-                    'website_id': request_data['website_id'],
-                    'domain': request_data['preferred_domain'],
-                    'business_name': request_data['business_name'],
-                    'client_email': request_data['contact_email'],
-                    'urgency': request_data.get('urgency', 'normal'),
-                    'service': 'concierge_automation'
-                }
-                
-                checkout_request = CheckoutSessionRequest(
-                    amount=price,
-                    currency="eur",
-                    success_url=success_url,
-                    cancel_url=cancel_url,
-                    metadata=metadata
-                )
-                
-                session: CheckoutSessionResponse = await stripe_checkout.create_checkout_session(checkout_request)
-                
-                # Enregistrer la transaction
-                payment_transaction = {
-                    "id": str(uuid.uuid4()),
-                    "session_id": session.session_id,
-                    "website_id": request_data['website_id'],
-                    "amount": price,
-                    "currency": "eur",
-                    "metadata": metadata,
-                    "payment_status": "initiated",
-                    "created_at": datetime.utcnow(),
-                    "service": "concierge_automation"
-                }
-                
-                await db.payment_transactions.insert_one(payment_transaction)
-                
-                return session.url
-            else:
-                # Fallback: PayPal simple
-                return f"https://paypal.me/aiwebgen/{price}EUR"
+            # Use PayPal fallback directly (Stripe integration removed)
+            return f"https://paypal.me/aiwebgen/{price}EUR"
                 
         except Exception as e:
-            logging.error(f"Erreur création lien paiement Stripe: {str(e)}")
+            logging.error(f"Erreur création lien paiement: {str(e)}")
             # Fallback: PayPal simple
             return f"https://paypal.me/aiwebgen/{price}EUR"
     
