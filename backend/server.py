@@ -930,7 +930,7 @@ class ConciergeAutomation:
                            style="background: #28a745; color: white; padding: 15px 30px; 
                                   text-decoration: none; border-radius: 5px; font-weight: bold;
                                   display: inline-block;">
-                            💳 Payer {price}€ et Lancer le Processus Automatique
+                            💳 Payer {price}€ via PayPal et Lancer l'Automatisation
                         </a>
                     </div>
                     
