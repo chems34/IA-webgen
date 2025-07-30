@@ -198,6 +198,187 @@ class AIWebGenTester:
         else:
             self.log_test("History Cleanup", False, f"Status: {status}, Data: {data}")
 
+    def test_concierge_service(self):
+        """Test the new concierge hosting service"""
+        print("\n🤝 Testing Concierge Service...")
+        
+        # We need a website ID to test with
+        if not self.test_data.get('website_id'):
+            self.test_generate_from_template()
+        
+        website_id = self.test_data.get('website_id')
+        if not website_id:
+            self.log_test("Concierge Service Setup", False, "No website ID available")
+            return
+        
+        # Test concierge service request
+        request_data = {
+            "website_id": website_id,
+            "contact_email": "test@example.com", 
+            "preferred_domain": "mon-site-test.com"
+        }
+        
+        # Make request using query parameters (as per the API signature)
+        url = f"{self.api_url}/request-concierge-service"
+        try:
+            response = requests.post(url, params=request_data, timeout=30)
+            success = response.status_code < 400
+            try:
+                data = response.json()
+            except:
+                data = {"raw_response": response.text}
+            status = response.status_code
+        except requests.exceptions.RequestException as e:
+            success, data, status = False, {"error": str(e)}, 0
+        
+        if success and 'request_id' in data and data.get('price') == 49.0:
+            self.log_test("Concierge Service Request", True, f"Request ID: {data['request_id']}, Price: {data['price']}€")
+            self.test_data['concierge_request_id'] = data['request_id']
+            
+            # Verify the response includes expected fields
+            expected_fields = ['message', 'status', 'next_steps', 'includes']
+            missing_fields = [field for field in expected_fields if field not in data]
+            if not missing_fields:
+                self.log_test("Concierge Service Response Fields", True, "All expected fields present")
+            else:
+                self.log_test("Concierge Service Response Fields", False, f"Missing fields: {missing_fields}")
+        else:
+            self.log_test("Concierge Service Request", False, f"Status: {status}, Data: {data}")
+
+    def test_hosting_guide_download(self):
+        """Test the hosting guide download"""
+        print("\n📚 Testing Hosting Guide Download...")
+        
+        # Test the hosting guide download endpoint
+        url = f"{self.api_url}/download-hosting-guide"
+        try:
+            response = requests.get(url, timeout=30)
+            success = response.status_code == 200
+            
+            if success:
+                # Check if it's a file download
+                content_type = response.headers.get('content-type', '')
+                content_disposition = response.headers.get('content-disposition', '')
+                
+                if 'text/markdown' in content_type or 'Guide-Hebergement' in content_disposition:
+                    self.log_test("Hosting Guide Download", True, f"Guide downloaded, size: {len(response.content)} bytes")
+                    
+                    # Check if content looks like markdown
+                    content_preview = response.text[:200] if hasattr(response, 'text') else str(response.content[:200])
+                    if '#' in content_preview or 'hébergement' in content_preview.lower():
+                        self.log_test("Hosting Guide Content", True, "Content appears to be valid markdown guide")
+                    else:
+                        self.log_test("Hosting Guide Content", False, f"Content doesn't look like guide: {content_preview}")
+                else:
+                    self.log_test("Hosting Guide Download", False, f"Unexpected content type: {content_type}")
+            else:
+                self.log_test("Hosting Guide Download", False, f"Status: {response.status_code}")
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Hosting Guide Download", False, f"Request failed: {str(e)}")
+
+    def test_download_website(self):
+        """Test website download functionality"""
+        print("\n📥 Testing Website Download...")
+        
+        # We need a paid website to test download
+        if not self.test_data.get('paid_website_id'):
+            # Create and mark a website as paid
+            if not self.test_data.get('website_id'):
+                self.test_generate_from_template()
+            
+            website_id = self.test_data.get('website_id')
+            if website_id:
+                success, data, status = self.make_request('POST', f'/test/mark-paid/{website_id}')
+                if success:
+                    self.test_data['paid_website_id'] = website_id
+        
+        paid_website_id = self.test_data.get('paid_website_id')
+        if not paid_website_id:
+            self.log_test("Website Download Setup", False, "No paid website available")
+            return
+        
+        # Test download
+        url = f"{self.api_url}/download/{paid_website_id}"
+        try:
+            response = requests.get(url, timeout=30)
+            success = response.status_code == 200
+            
+            if success:
+                content_type = response.headers.get('content-type', '')
+                if 'application/zip' in content_type:
+                    self.log_test("Website Download", True, f"ZIP file downloaded, size: {len(response.content)} bytes")
+                else:
+                    self.log_test("Website Download", False, f"Unexpected content type: {content_type}")
+            else:
+                self.log_test("Website Download", False, f"Status: {response.status_code}")
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Website Download", False, f"Request failed: {str(e)}")
+
+    def test_new_hosting_features_integration(self):
+        """Test the complete hosting workflow integration"""
+        print("\n🌐 Testing Complete Hosting Workflow...")
+        
+        # Step 1: Generate website
+        if not self.test_data.get('website_id'):
+            self.test_generate_from_template()
+        
+        website_id = self.test_data.get('website_id')
+        if not website_id:
+            self.log_test("Hosting Workflow - Website Generation", False, "Could not generate website")
+            return
+        
+        # Step 2: Mark as paid (simulate payment)
+        success, data, status = self.make_request('POST', f'/test/mark-paid/{website_id}')
+        if not success:
+            self.log_test("Hosting Workflow - Payment", False, f"Could not mark as paid: {status}")
+            return
+        
+        # Step 3: Download website
+        url = f"{self.api_url}/download/{website_id}"
+        try:
+            response = requests.get(url, timeout=30)
+            download_success = response.status_code == 200
+        except:
+            download_success = False
+        
+        if not download_success:
+            self.log_test("Hosting Workflow - Download", False, "Could not download website")
+            return
+        
+        # Step 4: Test concierge service request
+        concierge_data = {
+            "website_id": website_id,
+            "contact_email": "workflow-test@example.com",
+            "preferred_domain": "workflow-test.com"
+        }
+        
+        url = f"{self.api_url}/request-concierge-service"
+        try:
+            response = requests.post(url, params=concierge_data, timeout=30)
+            concierge_success = response.status_code < 400
+        except:
+            concierge_success = False
+        
+        # Step 5: Test guide download
+        url = f"{self.api_url}/download-hosting-guide"
+        try:
+            response = requests.get(url, timeout=30)
+            guide_success = response.status_code == 200
+        except:
+            guide_success = False
+        
+        # Evaluate complete workflow
+        if download_success and concierge_success and guide_success:
+            self.log_test("Complete Hosting Workflow", True, "All hosting features working together")
+        else:
+            failures = []
+            if not download_success: failures.append("download")
+            if not concierge_success: failures.append("concierge")
+            if not guide_success: failures.append("guide")
+            self.log_test("Complete Hosting Workflow", False, f"Failed components: {', '.join(failures)}")
+
     def test_editing_endpoints(self):
         """Test the new website editing functionality"""
         print("\n🎨 Testing Website Editing System...")
