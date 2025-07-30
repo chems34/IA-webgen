@@ -822,6 +822,14 @@ function WebsiteGenerator() {
           </div>
         )}
       </div>
+
+      {/* Concierge Modal */}
+      <ConciergeModal 
+        isOpen={showConciergeModal}
+        onClose={() => setShowConciergeModal(false)}
+        websiteId={generatedWebsite?.id}
+        websiteName={generatedWebsite?.business_name || formData.business_name}
+      />
     </div>
   );
 }
