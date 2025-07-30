@@ -360,14 +360,15 @@ function WebsiteGenerator() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Nom de votre entreprise *
                   </label>
-                <input
-                  type="text"
-                  name="business_name"
-                  value={formData.business_name}
-                  onChange={handleInputChange}
-                  placeholder="Ex: Ma Super Entreprise"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                />
+                  <input
+                    type="text"
+                    name="business_name"
+                    value={formData.business_name}
+                    onChange={handleInputChange}
+                    placeholder="Ex: Ma Super Entreprise"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
               </div>
 
               <div>
