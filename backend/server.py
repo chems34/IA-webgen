@@ -29,6 +29,9 @@ db = client[os.environ['DB_NAME']]
 PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID')
 PAYPAL_CLIENT_SECRET = os.environ.get('PAYPAL_CLIENT_SECRET')
 
+# Gemini AI Configuration
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+
 # Create the main app without a prefix
 app = FastAPI()
 
