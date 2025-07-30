@@ -290,27 +290,56 @@ function ConciergeModal({ isOpen, onClose, websiteId, websiteName }) {
 
         {step === 3 && success && (
           <div className="p-6 text-center">
-            <div className="text-6xl mb-4">🎉</div>
+            <div className="text-6xl mb-4">🤖</div>
             <h3 className="text-2xl font-bold text-green-600 mb-4">
-              Demande enregistrée avec succès !
+              Automatisation Lancée avec Succès !
             </h3>
             
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
               <div className="space-y-2 text-left">
                 <p><strong>📧 Email :</strong> {formData.email}</p>
                 <p><strong>🌐 Domaine :</strong> {formData.domain}</p>
-                <p><strong>⏰ Délai :</strong> {formData.urgency === 'urgent' ? '24h' : '48h'}</p>
+                <p><strong>⏰ Délai Automatisé :</strong> <span className="text-green-600 font-bold">{estimatedTime}</span></p>
                 <p><strong>💰 Prix :</strong> {formData.urgency === 'urgent' ? '59€' : '49€'}</p>
+                <p><strong>🆔 ID Demande :</strong> {requestId}</p>
               </div>
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <h4 className="font-bold text-blue-800 mb-2">📋 Prochaines étapes :</h4>
+              <h4 className="font-bold text-blue-800 mb-2">🚀 Processus Automatique Démarré :</h4>
               <div className="text-sm text-blue-700 space-y-1">
-                <p>✅ Nous vérifions la disponibilité de votre domaine</p>
-                <p>📧 Vous recevez un email de confirmation dans l'heure</p>
-                <p>💳 Lien de paiement envoyé (PayPal ou CB)</p>
-                <p>🚀 Mise en ligne dès paiement confirmé</p>
+                <p>✅ Domaine vérifié et réservé automatiquement</p>
+                <p>💳 <strong>Prochaine étape :</strong> Paiement sécurisé via le lien ci-dessous</p>
+                <p>🤖 Dès paiement → Automatisation complète (achat domaine, hébergement, mise en ligne)</p>
+                <p>📧 Vous recevrez un email à chaque étape automatique</p>
+                <p>🎉 <strong>Site en ligne dans {estimatedTime} maximum</strong></p>
+              </div>
+            </div>
+
+            {paymentLink && (
+              <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-lg p-4 mb-6">
+                <h4 className="font-bold text-white mb-3">💳 Paiement Sécurisé</h4>
+                <a
+                  href={paymentLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-white text-green-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+                >
+                  💳 Payer {formData.urgency === 'urgent' ? '59€' : '49€'} et Lancer l'Automatisation
+                </a>
+                <p className="text-white text-sm mt-2">
+                  Automatisation complète démarrera immédiatement après paiement
+                </p>
+              </div>
+            )}
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+              <h4 className="font-bold text-yellow-800 mb-2">⏰ Chronologie Automatique :</h4>
+              <div className="text-sm text-yellow-700 space-y-1">
+                <p><strong>0-30 min :</strong> Achat automatique du domaine</p>
+                <p><strong>30-90 min :</strong> Configuration hébergement et déploiement</p>
+                <p><strong>90 min-{formData.urgency === 'urgent' ? '24h' : '4h'} :</strong> Configuration DNS et SSL</p>
+                <p><strong>Final :</strong> Email avec votre site en ligne !</p>
               </div>
             </div>
 
