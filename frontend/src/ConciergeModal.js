@@ -23,14 +23,27 @@ function ConciergeModal({ isOpen, onClose, websiteId, websiteName }) {
       const response = await axios.post(`${API}/request-concierge-service`, {
         website_id: websiteId,
         contact_email: formData.email,
-        preferred_domain: formData.domain
+        preferred_domain: formData.domain,
+        phone: formData.phone,
+        urgency: formData.urgency
       });
       
+      // Vérifier si le domaine est disponible
+      if (response.data.status === "domain_unavailable") {
+        // Afficher les alternatives
+        alert(`❌ Domaine ${formData.domain} non disponible.\n\nAlternatives suggérées:\n${response.data.alternatives.join('\n')}\n\nVeuillez choisir un autre domaine.`);
+        return;
+      }
+      
+      // Sauvegarder les données de réponse
+      setPaymentLink(response.data.payment_link);
+      setRequestId(response.data.request_id);
+      setEstimatedTime(response.data.estimated_completion);
       setSuccess(true);
       setStep(3);
     } catch (error) {
       console.error("Error:", error);
-      alert("❌ Erreur lors de la demande. Réessayez.");
+      alert("❌ Erreur lors de la demande automatisée. Réessayez.");
     } finally {
       setLoading(false);
     }
