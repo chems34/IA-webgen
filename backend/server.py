@@ -1981,46 +1981,15 @@ async def concierge_stripe_webhook(request: Request):
 
 @api_router.get("/concierge/payment/status/{session_id}")
 async def get_concierge_payment_status(session_id: str):
-    """Vérifier le statut de paiement d'une demande de conciergerie"""
+    """Vérifier le statut de paiement d'une demande de conciergerie (Stripe integration removed)"""
     try:
         # Vérifier dans notre base de données
         transaction = await db.payment_transactions.find_one({"session_id": session_id})
         if not transaction:
             raise HTTPException(status_code=404, detail="Transaction non trouvée")
         
-        # Vérifier avec Stripe si nécessaire
-        stripe_api_key = os.environ.get('STRIPE_API_KEY', os.environ.get('STRIPE_SECRET_KEY'))
-        
-        if stripe_api_key and transaction.get('payment_status') == 'initiated':
-            host_url = "https://bda0d49d-4e16-4c2f-b3a8-78fbd2ddda32.preview.emergentagent.com"
-            webhook_url = f"{host_url}/api/concierge/webhook/stripe"
-            stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
-            
-            # Vérifier le statut avec Stripe
-            checkout_status: CheckoutStatusResponse = await stripe_checkout.get_checkout_status(session_id)
-            
-            # Mettre à jour notre base de données
-            if checkout_status.payment_status == "paid" and transaction.get('payment_status') != 'paid':
-                await db.payment_transactions.update_one(
-                    {"session_id": session_id},
-                    {"$set": {
-                        "payment_status": "paid",
-                        "completed_at": datetime.utcnow(),
-                        "stripe_status": checkout_status.status
-                    }}
-                )
-                
-                # Démarrer l'automatisation si pas encore fait
-                metadata = transaction.get('metadata', {})
-                if metadata.get('service') == 'concierge_automation':
-                    await concierge_automation.execute_full_automation(
-                        metadata['website_id'],
-                        metadata['domain'],
-                        metadata['business_name'],
-                        metadata['client_email']
-                    )
-                
-                transaction['payment_status'] = 'paid'
+        # Note: Stripe verification removed - using database status only
+        logging.info(f"Payment status check for session {session_id}: {transaction.get('payment_status', 'unknown')}")
         
         # Nettoyer les données pour la réponse
         clean_transaction = {}
