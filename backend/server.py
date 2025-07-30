@@ -1004,6 +1004,25 @@ async def save_website_changes(website_id: str, changes: dict):
         logging.error(f"Error saving website changes: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Test endpoint to mark website as paid
+@api_router.post("/test/mark-paid/{website_id}")
+async def mark_website_as_paid(website_id: str):
+    """Mark website as paid (for testing purposes)"""
+    try:
+        website = await db.websites.find_one({"id": website_id})
+        if not website:
+            raise HTTPException(status_code=404, detail="Site web non trouvé")
+        
+        await db.websites.update_one(
+            {"id": website_id}, 
+            {"$set": {"paid": True, "payment_confirmed_at": datetime.utcnow()}}
+        )
+        
+        return {"message": "Site marqué comme payé", "website_id": website_id, "editable": True}
+    except Exception as e:
+        logging.error(f"Error marking website as paid: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/")
 async def root():
     return {"message": "Website Generator API is running!"}
