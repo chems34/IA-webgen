@@ -16,6 +16,7 @@ import base64
 from fastapi.responses import StreamingResponse, FileResponse
 from enum import Enum
 import aiohttp
+import asyncio
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
