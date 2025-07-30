@@ -2018,23 +2018,118 @@ async def request_concierge_service_automated(request: ConciergeRequest):
         logging.error(f"Erreur service concierge automatisé: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.post("/concierge/webhook/payment")
-async def concierge_payment_webhook(webhook_data: dict):
-    """Webhook pour traitement automatique après paiement"""
+@api_router.post("/concierge/webhook/stripe")
+async def concierge_stripe_webhook(request: Request):
+    """Webhook Stripe pour automatisation complète de la conciergerie"""
     try:
-        logging.info("🔔 Webhook paiement conciergerie reçu")
+        # Obtenir le body et signature
+        body = await request.body()
+        stripe_signature = request.headers.get("Stripe-Signature")
         
-        # Traiter le webhook automatiquement
-        result = await concierge_automation.process_payment_webhook(webhook_data)
+        # Utiliser Stripe API du système
+        stripe_api_key = os.environ.get('STRIPE_API_KEY', os.environ.get('STRIPE_SECRET_KEY'))
         
-        return {
-            "status": "processed",
-            "message": "Webhook traité automatiquement",
-            "automation_result": result
-        }
+        if not stripe_api_key:
+            raise HTTPException(status_code=500, detail="Stripe API key not configured")
+        
+        # Initialiser Stripe checkout
+        host_url = "https://bda0d49d-4e16-4c2f-b3a8-78fbd2ddda32.preview.emergentagent.com"
+        webhook_url = f"{host_url}/api/concierge/webhook/stripe"
+        stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+        
+        # Traiter le webhook
+        webhook_response = await stripe_checkout.handle_webhook(body, stripe_signature)
+        
+        logging.info(f"🔔 Webhook Stripe reçu: {webhook_response.event_type}")
+        
+        # Si c'est un paiement réussi
+        if webhook_response.event_type == "checkout.session.completed" and webhook_response.payment_status == "paid":
+            # Mettre à jour la transaction
+            await db.payment_transactions.update_one(
+                {"session_id": webhook_response.session_id},
+                {"$set": {
+                    "payment_status": "paid",
+                    "completed_at": datetime.utcnow(),
+                    "event_id": webhook_response.event_id
+                }}
+            )
+            
+            # Récupérer les métadonnées pour l'automatisation
+            metadata = webhook_response.metadata
+            if metadata and metadata.get('service') == 'concierge_automation':
+                # Démarrer l'automatisation complète
+                automation_result = await concierge_automation.execute_full_automation(
+                    metadata['website_id'],
+                    metadata['domain'],
+                    metadata['business_name'],
+                    metadata['client_email']
+                )
+                
+                logging.info(f"🤖 Automatisation lancée pour {metadata['domain']}: {automation_result}")
+        
+        return {"status": "success", "message": "Webhook traité"}
         
     except Exception as e:
-        logging.error(f"Erreur webhook paiement: {str(e)}")
+        logging.error(f"❌ Erreur webhook Stripe: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/concierge/payment/status/{session_id}")
+async def get_concierge_payment_status(session_id: str):
+    """Vérifier le statut de paiement d'une demande de conciergerie"""
+    try:
+        # Vérifier dans notre base de données
+        transaction = await db.payment_transactions.find_one({"session_id": session_id})
+        if not transaction:
+            raise HTTPException(status_code=404, detail="Transaction non trouvée")
+        
+        # Vérifier avec Stripe si nécessaire
+        stripe_api_key = os.environ.get('STRIPE_API_KEY', os.environ.get('STRIPE_SECRET_KEY'))
+        
+        if stripe_api_key and transaction.get('payment_status') == 'initiated':
+            host_url = "https://bda0d49d-4e16-4c2f-b3a8-78fbd2ddda32.preview.emergentagent.com"
+            webhook_url = f"{host_url}/api/concierge/webhook/stripe"
+            stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+            
+            # Vérifier le statut avec Stripe
+            checkout_status: CheckoutStatusResponse = await stripe_checkout.get_checkout_status(session_id)
+            
+            # Mettre à jour notre base de données
+            if checkout_status.payment_status == "paid" and transaction.get('payment_status') != 'paid':
+                await db.payment_transactions.update_one(
+                    {"session_id": session_id},
+                    {"$set": {
+                        "payment_status": "paid",
+                        "completed_at": datetime.utcnow(),
+                        "stripe_status": checkout_status.status
+                    }}
+                )
+                
+                # Démarrer l'automatisation si pas encore fait
+                metadata = transaction.get('metadata', {})
+                if metadata.get('service') == 'concierge_automation':
+                    await concierge_automation.execute_full_automation(
+                        metadata['website_id'],
+                        metadata['domain'],
+                        metadata['business_name'],
+                        metadata['client_email']
+                    )
+                
+                transaction['payment_status'] = 'paid'
+        
+        # Nettoyer les données pour la réponse
+        clean_transaction = {}
+        for key, value in transaction.items():
+            if key == "_id":
+                continue
+            elif key in ["created_at", "completed_at"] and hasattr(value, 'isoformat'):
+                clean_transaction[key] = value.isoformat()
+            else:
+                clean_transaction[key] = value
+        
+        return clean_transaction
+        
+    except Exception as e:
+        logging.error(f"Erreur vérification paiement: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/concierge/status/{request_id}")
