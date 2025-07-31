@@ -3,80 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 IA WebGen - Générateur de Sites IA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>IA WebGen - Créateur de Sites Web Automatisé</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); }
-        .glow { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen text-white">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <header class="text-center mb-12">
-            <h1 class="text-6xl font-bold mb-4 text-green-400">🤖 IA WebGen</h1>
-            <p class="text-2xl mb-8 text-gray-300">Générateur de Sites Web par Intelligence Artificielle</p>
-            <div class="bg-red-900 text-red-300 px-4 py-2 rounded-lg inline-block mb-8">
-                ⚠️ Application en cours de déploiement - Disponible bientôt !
-            </div>
-        </header>
-
-        <!-- Features -->
-        <div class="grid md:grid-cols-3 gap-8 mb-12">
-            <div class="bg-gray-900 p-6 rounded-lg border border-green-500 glow">
-                <div class="text-4xl mb-4">⚡</div>
-                <h3 class="text-xl font-bold mb-2 text-green-400">Génération Rapide</h3>
-                <p class="text-gray-300">Créez votre site web professionnel en quelques minutes avec l'IA</p>
-            </div>
-            
-            <div class="bg-gray-900 p-6 rounded-lg border border-green-500 glow">
-                <div class="text-4xl mb-4">🎨</div>
-                <h3 class="text-xl font-bold mb-2 text-green-400">Templates Professionnels</h3>
-                <p class="text-gray-300">Large choix de templates adaptés à votre secteur d'activité</p>
-            </div>
-            
-            <div class="bg-gray-900 p-6 rounded-lg border border-green-500 glow">
-                <div class="text-4xl mb-4">📱</div>
-                <h3 class="text-xl font-bold mb-2 text-green-400">Responsive Design</h3>
-                <p class="text-gray-300">Sites optimisés pour tous les appareils : PC, tablette, mobile</p>
-            </div>
-        </div>
-
-        <!-- Demo Section -->
-        <div class="bg-gray-900 p-8 rounded-lg border border-green-500 glow mb-12">
-            <h2 class="text-3xl font-bold text-center mb-6 text-green-400">🚀 Comment ça fonctionne</h2>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="text-center">
-                    <div class="text-5xl mb-4">1️⃣</div>
-                    <h3 class="text-lg font-bold mb-2">Décrivez votre projet</h3>
-                    <p class="text-gray-300">Indiquez le type de site et vos préférences</p>
+<body class="font-sans">
+    <!-- Header -->
+    <div class="gradient-bg text-white py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">🤖 IA WebGen</h1>
+                <div class="text-sm">
+                    <span class="bg-green-500 px-3 py-1 rounded-full">
+                        ✨ 78% choisissent notre service concierge !
+                    </span>
                 </div>
-                <div class="text-center">
-                    <div class="text-5xl mb-4">2️⃣</div>
-                    <h3 class="text-lg font-bold mb-2">L'IA génère</h3>
-                    <p class="text-gray-300">Notre IA crée un site personnalisé pour vous</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-5xl mb-4">3️⃣</div>
-                    <h3 class="text-lg font-bold mb-2">Téléchargez</h3>
-                    <p class="text-gray-300">Récupérez votre site complet et prêt à publier</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contact -->
-        <div class="text-center">
-            <h2 class="text-2xl font-bold mb-4 text-green-400">📧 Restez informé</h2>
-            <p class="text-gray-300 mb-6">L'application sera bientôt disponible ! Revenez prochainement.</p>
-            <div class="bg-green-900 text-green-300 px-6 py-3 rounded-lg inline-block">
-                🔄 Déploiement en cours... Patience !
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="text-center py-8 text-gray-400">
-        <p>&copy; 2025 IA WebGen - Propulsé par Intelligence Artificielle</p>
-    </footer>
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-5xl font-bold mb-6">
+                🚀 Créez votre site web en quelques minutes
+            </h2>
+            <p class="text-xl mb-8 opacity-90">
+                Intelligence artificielle + Service concierge automatisé = Votre site en ligne en 2-4h !
+            </p>
+            
+            <!-- Formulaire de création -->
+            <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg p-8 max-w-md mx-auto">
+                <h3 class="text-2xl font-bold mb-6">🎯 Créer mon site maintenant</h3>
+                
+                <form id="websiteForm" class="space-y-4">
+                    <div>
+                        <input type="text" id="businessName" placeholder="Nom de votre entreprise" 
+                               class="w-full p-3 rounded-lg text-gray-800 font-medium">
+                    </div>
+                    
+                    <div>
+                        <textarea id="description" placeholder="Décrivez votre activité (ex: Restaurant italien, Salon de coiffure...)" 
+                                  class="w-full p-3 rounded-lg text-gray-800 font-medium h-24"></textarea>
+                    </div>
+                    
+                    <div>
+                        <select id="siteType" class="w-full p-3 rounded-lg text-gray-800 font-medium">
+                            <option value="">Type de site</option>
+                            <option value="restaurant">🍽️ Restaurant</option>
+                            <option value="salon">💇 Salon de beauté</option>
+                            <option value="commerce">🏪 Commerce</option>
+                            <option value="service">🔧 Service</option>
+                            <option value="autre">✨ Autre</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all">
+                        🚀 Créer mon site maintenant - 15€
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Concierge -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-bold text-gray-800 mb-4">
+                    🤖 Service Concierge Automatisé
+                </h3>
+                <p class="text-xl text-gray-600">
+                    78% de nos clients choisissent notre automatisation complète !
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Plan Standard -->
+                <div class="bg-white rounded-lg shadow-lg p-8 card-hover">
+                    <div class="text-center">
+                        <h4 class="text-2xl font-bold text-gray-800 mb-4">📄 Site Seul</h4>
+                        <div class="text-4xl font-bold text-blue-600 mb-4">15€</div>
+                        <ul class="text-left space-y-2 mb-6">
+                            <li>✅ Site web créé par IA</li>
+                            <li>✅ Design professionnel</li>
+                            <li>✅ Téléchargement immédiat</li>
+                            <li>❌ Pas d'hébergement</li>
+                            <li>❌ Vous devez tout installer</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Plan Concierge -->
+                <div class="bg-gradient-to-br from-green-500 to-blue-600 text-white rounded-lg shadow-lg p-8 card-hover relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 px-4 py-1 rounded-full text-sm font-bold">
+                        🔥 78% CHOISISSENT
+                    </div>
+                    <div class="text-center mt-4">
+                        <h4 class="text-2xl font-bold mb-4">🤖 Concierge Automatisé</h4>
+                        <div class="text-4xl font-bold mb-4">49€</div>
+                        <ul class="text-left space-y-2 mb-6">
+                            <li>✅ Tout ce qui est inclus dans le plan Standard</li>
+                            <li>✅ <strong>Domaine acheté automatiquement</strong></li>
+                            <li>✅ <strong>Hébergement configuré automatiquement</strong></li>
+                            <li>✅ <strong>Site en ligne en 2-4h automatiquement</strong></li>
+                            <li>✅ <strong>SSL + DNS automatiques</strong></li>
+                            <li>✅ <strong>Support 3 mois inclus</strong></li>
+                        </ul>
+                        <div class="bg-yellow-400 text-gray-800 p-3 rounded-lg text-sm font-bold">
+                            ⏰ Délai garanti : 2-4h maximum !
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processus automatisé -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <h3 class="text-4xl font-bold text-center text-gray-800 mb-12">
+                🤖 Comment ça marche ? (100% Automatisé)
+            </h3>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="bg-blue-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+                        <h4 class="font-bold text-lg mb-2">🎯 Vous commandez</h4>
+                        <p class="text-gray-600">Remplissez le formulaire et payez</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-green-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                        <h4 class="font-bold text-lg mb-2">🤖 IA génère</h4>
+                        <p class="text-gray-600">Intelligence artificielle crée votre site</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-purple-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+                        <h4 class="font-bold text-lg mb-2">⚡ Automatisation</h4>
+                        <p class="text-gray-600">Domaine + hébergement automatiques</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-orange-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
+                        <h4 class="font-bold text-lg mb-2">🌐 En ligne !</h4>
+                        <p class="text-gray-600">Site accessible mondialement</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-3xl font-bold mb-8">💬 Besoin d'aide ?</h3>
+            <p class="text-xl mb-8">Notre équipe est là pour vous accompagner !</p>
+            <div class="space-x-4">
+                <a href="mailto:contact@iawebgen.com" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                    📧 Email
+                </a>
+                <a href="https://paypal.me/ChemsAssakour" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-600 transition-colors">
+                    💳 PayPal: ChemsAssakour
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Formulaire de création de site
+        document.getElementById('websiteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const businessName = document.getElementById('businessName').value;
+            const description = document.getElementById('description').value;
+            const siteType = document.getElementById('siteType').value;
+            
+            if (!businessName || !description) {
+                alert('❌ Veuillez remplir tous les champs obligatoires !');
+                return;
+            }
+            
+            // Simulation de création de site
+            alert(`🎉 Site "${businessName}" en cours de création !\n\n🤖 Notre IA génère votre site professionnel...\n\n💳 Paiement : 15€ via PayPal\n\nVoulez-vous également le service concierge automatisé (49€) pour avoir votre site en ligne en 2-4h ?`);
+            
+            // Redirection vers PayPal pour le paiement
+            const paypalUrl = `https://paypal.me/ChemsAssakour/15EUR`;
+            
+            if (confirm('🚀 Redirection vers PayPal pour le paiement ?')) {
+                window.open(paypalUrl, '_blank');
+            }
+        });
+        
+        // Animation au scroll
+        window.addEventListener('scroll', function() {
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
