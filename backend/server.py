@@ -877,12 +877,12 @@ class ConciergeAutomation:
         """Crée lien de paiement automatique avec PayPal"""
         try:
             # Use PayPal fallback directly (Stripe integration removed)
-            return f"https://paypal.me/assakour/{price}EUR"
+            return f"https://paypal.me/ChemsAssakour/{price}EUR"
                 
         except Exception as e:
             logging.error(f"Erreur création lien paiement: {str(e)}")
             # Fallback: PayPal simple
-            return f"https://paypal.me/assakour/{price}EUR"
+            return f"https://paypal.me/ChemsAssakour/{price}EUR"
     
     async def send_confirmation_email(self, request_data: dict, payment_link: str, price: float):
         """Envoie email de confirmation automatique"""
