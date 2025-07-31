@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA WebGen - Créateur de Sites Web Automatisé</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover:hover { transform: translateY(-5px); transition: transform 0.3s ease; }
+        .fade-in { animation: fadeIn 0.8s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Header -->
+    <div class="gradient-bg text-white py-4 fade-in">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center flex-wrap">
+                <h1 class="text-2xl font-bold">🤖 IA WebGen</h1>
+                <div class="text-sm mt-2 sm:mt-0">
+                    <span class="bg-green-500 px-3 py-1 rounded-full text-xs sm:text-sm">
+                        ✨ 78% choisissent notre service concierge !
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20 fade-in">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl sm:text-5xl font-bold mb-6">
+                🚀 Créez votre site web en quelques minutes
+            </h2>
+            <p class="text-lg sm:text-xl mb-8 opacity-90">
+                Intelligence artificielle + Service concierge automatisé = Votre site en ligne en 2-4h !
+            </p>
+            
+            <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg p-6 sm:p-8 max-w-md mx-auto">
+                <h3 class="text-xl sm:text-2xl font-bold mb-6">🎯 Créer mon site maintenant</h3>
+                
+                <form id="websiteForm" class="space-y-4">
+                    <input type="text" id="businessName" placeholder="Nom de votre entreprise" 
+                           class="w-full p-3 rounded-lg text-gray-800 font-medium" required>
+                    
+                    <textarea id="description" placeholder="Décrivez votre activité (ex: Restaurant italien, Salon de coiffure...)" 
+                              class="w-full p-3 rounded-lg text-gray-800 font-medium h-24" required></textarea>
+                    
+                    <select id="siteType" class="w-full p-3 rounded-lg text-gray-800 font-medium" required>
+                        <option value="">Choisissez le type de site</option>
+                        <option value="restaurant">🍽️ Restaurant</option>
+                        <option value="salon">💇 Salon de beauté</option>
+                        <option value="commerce">🏪 Commerce/Boutique</option>
+                        <option value="service">🔧 Service professionnel</option>
+                        <option value="medical">🏥 Cabinet médical</option>
+                        <option value="immobilier">🏠 Immobilier</option>
+                        <option value="autre">✨ Autre activité</option>
+                    </select>
+                    
+                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transform hover:scale-105 transition-all duration-200">
+                        🚀 Créer mon site maintenant - 15€
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Concierge -->
+    <section class="py-16 bg-gray-50 fade-in">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+                    🤖 Service Concierge Automatisé
+                </h3>
+                <p class="text-lg sm:text-xl text-gray-600">
+                    78% de nos clients choisissent notre automatisation complète !
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <!-- Plan Standard -->
+                <div class="bg-white rounded-lg shadow-lg p-6 sm:p-8 card-hover">
+                    <div class="text-center">
+                        <h4 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">📄 Site Seul</h4>
+                        <div class="text-3xl sm:text-4xl font-bold text-blue-600 mb-4">15€</div>
+                        <ul class="text-left space-y-2 mb-6 text-sm sm:text-base">
+                            <li>✅ Site web créé par IA</li>
+                            <li>✅ Design professionnel adaptatif</li>
+                            <li>✅ Téléchargement immédiat</li>
+                            <li>✅ Code source complet</li>
+                            <li>❌ Pas d'hébergement inclus</li>
+                            <li>❌ Installation par vos soins</li>
+                        </ul>
+                        <div class="text-center">
+                            <a href="https://paypal.me/ChemsAssakour/15EUR" target="_blank" 
+                               class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                                💳 Commander - 15€
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan Concierge -->
+                <div class="bg-gradient-to-br from-green-500 to-blue-600 text-white rounded-lg shadow-lg p-6 sm:p-8 card-hover relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 px-3 py-1 rounded-full text-xs sm:text-sm font-bold">
+                        🔥 78% CHOISISSENT
+                    </div>
+                    <div class="text-center mt-4">
+                        <h4 class="text-xl sm:text-2xl font-bold mb-4">🤖 Concierge Automatisé</h4>
+                        <div class="text-3xl sm:text-4xl font-bold mb-4">49€</div>
+                        <ul class="text-left space-y-2 mb-6 text-sm sm:text-base">
+                            <li>✅ Tout ce qui est inclus dans le plan Standard</li>
+                            <li>✅ <strong>Domaine acheté automatiquement</strong></li>
+                            <li>✅ <strong>Hébergement configuré automatiquement</strong></li>
+                            <li>✅ <strong>Site en ligne en 2-4h maximum</strong></li>
+                            <li>✅ <strong>SSL et DNS automatiques</strong></li>
+                            <li>✅ <strong>Support technique 3 mois inclus</strong></li>
+                            <li>✅ <strong>Monitoring et sauvegardes</strong></li>
+                        </ul>
+                        <div class="bg-yellow-400 text-gray-800 p-3 rounded-lg text-xs sm:text-sm font-bold mb-4">
+                            ⏰ Délai garanti : 2-4h maximum !<br>
+                            🤖 100% automatisé par IA
+                        </div>
+                        <div class="text-center">
+                            <a href="https://paypal.me/ChemsAssakour/49EUR" target="_blank" 
+                               class="inline-block bg-yellow-400 hover:bg-yellow-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors">
+                                🚀 Service Concierge - 49€
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processus automatisé -->
+    <section class="py-16 fade-in">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-12">
+                🤖 Comment ça marche ? (100% Automatisé)
+            </h3>
+            
+            <div class="max-w-5xl mx-auto">
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center p-4">
+                        <div class="bg-blue-500 text-white rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-lg sm:text-2xl font-bold mx-auto mb-4">1</div>
+                        <h4 class="font-bold text-base sm:text-lg mb-2">🎯 Vous commandez</h4>
+                        <p class="text-gray-600 text-sm sm:text-base">Remplissez le formulaire et payez via PayPal</p>
+                    </div>
+                    
+                    <div class="text-center p-4">
+                        <div class="bg-green-500 text-white rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-lg sm:text-2xl font-bold mx-auto mb-4">2</div>
+                        <h4 class="font-bold text-base sm:text-lg mb-2">🤖 IA génère</h4>
+                        <p class="text-gray-600 text-sm sm:text-base">Intelligence artificielle crée votre site unique</p>
+                    </div>
+                    
+                    <div class="text-center p-4">
+                        <div class="bg-purple-500 text-white rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-lg sm:text-2xl font-bold mx-auto mb-4">3</div>
+                        <h4 class="font-bold text-base sm:text-lg mb-2">⚡ Automatisation</h4>
+                        <p class="text-gray-600 text-sm sm:text-base">Domaine + hébergement configurés automatiquement</p>
+                    </div>
+                    
+                    <div class="text-center p-4">
+                        <div class="bg-orange-500 text-white rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-lg sm:text-2xl font-bold mx-auto mb-4">4</div>
+                        <h4 class="font-bold text-base sm:text-lg mb-2">🌐 En ligne !</h4>
+                        <p class="text-gray-600 text-sm sm:text-base">Site accessible mondialement en 2-4h</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Témoignages -->
+    <section class="py-16 bg-gray-50 fade-in">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-12">
+                💬 Ce que disent nos clients
+            </h3>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="text-yellow-400 text-xl mb-4">⭐⭐⭐⭐⭐</div>
+                    <p class="text-gray-600 mb-4">"Site créé en 3h ! Incroyable efficacité de l'IA et service client parfait."</p>
+                    <div class="font-bold text-gray-800">- Marie, Salon de coiffure</div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="text-yellow-400 text-xl mb-4">⭐⭐⭐⭐⭐</div>
+                    <p class="text-gray-600 mb-4">"Le service concierge est un gain de temps énorme. Mon restaurant a enfin son site !"</p>
+                    <div class="font-bold text-gray-800">- Pierre, Restaurant</div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="text-yellow-400 text-xl mb-4">⭐⭐⭐⭐⭐</div>
+                    <p class="text-gray-600 mb-4">"Prix imbattable et qualité professionnelle. Je recommande !"</p>
+                    <div class="font-bold text-gray-800">- Sophie, Commerce</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="gradient-bg text-white py-16 fade-in">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-2xl sm:text-3xl font-bold mb-8">💬 Besoin d'aide ou d'informations ?</h3>
+            <p class="text-lg sm:text-xl mb-8">Notre équipe est là pour vous accompagner dans votre projet !</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="mailto:contact@iawebgen.com" 
+                   class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                    📧 contact@iawebgen.com
+                </a>
+                <a href="https://paypal.me/ChemsAssakour" target="_blank" 
+                   class="bg-green-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-600 transition-colors">
+                    💳 PayPal: ChemsAssakour
+                </a>
+            </div>
+            
+            <div class="mt-8 text-sm opacity-75">
+                <p>🤖 Propulsé par IA WebGen - Création automatisée de sites web</p>
+                <p>⚡ Service concierge disponible 24h/24 - Délai garanti 2-4h</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // JavaScript simplifié et sécurisé
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('websiteForm');
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const businessName = document.getElementById('businessName');
+                    const description = document.getElementById('description');
+                    const siteType = document.getElementById('siteType');
+                    
+                    if (!businessName || !description || !siteType) {
+                        alert('❌ Erreur : formulaire incomplet');
+                        return;
+                    }
+                    
+                    const businessValue = businessName.value.trim();
+                    const descriptionValue = description.value.trim();
+                    const siteTypeValue = siteType.value;
+                    
+                    if (!businessValue || !descriptionValue || !siteTypeValue) {
+                        alert('❌ Veuillez remplir tous les champs obligatoires !');
+                        return;
+                    }
+                    
+                    // Message de confirmation
+                    const message = `🎉 Parfait ! Site "${businessValue}" en cours de création !\n\n` +
+                                  `🤖 Notre IA génère votre site professionnel...\n` +
+                                  `💳 Prix : 15€ (site seul) ou 49€ (service concierge)\n\n` +
+                                  `✨ Recommandation : 78% choisissent le service concierge pour avoir leur site en ligne en 2-4h !\n\n` +
+                                  `Voulez-vous procéder au paiement ?`;
+                    
+                    if (confirm(message)) {
+                        // Redirection vers PayPal
+                        const paypalUrl = 'https://paypal.me/ChemsAssakour/15EUR';
+                        window.open(paypalUrl, '_blank');
+                    }
+                });
+            }
+            
+            // Animation au scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observer les éléments avec fade-in
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(function(el) {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
